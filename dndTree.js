@@ -277,7 +277,7 @@ async function draw_tree(error, treeData) {
     baseSvg.append("rect")
         .attr("width", "100%")
         .attr("height", "100%")
-        .attr("fill", "white")
+        .attr("fill", "#E5E5E5")
 
     baseSvg.call(zoomListener);
 
@@ -558,11 +558,11 @@ async function draw_tree(error, treeData) {
             x = x * scale + viewerHeight / 2;
         }
 
-        d3.select('g').transition()
+        /*d3.select('g').transition()
             .duration(duration)
             .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
         zoomListener.scale(scale);
-        zoomListener.translate([x, y]);
+        zoomListener.translate([x, y]);*/
     }
 
 

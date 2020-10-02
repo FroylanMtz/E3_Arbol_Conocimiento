@@ -408,6 +408,7 @@ function delete_node(node1) {
         permiteDelete = false;
 
         if (deleteOption == 1) {
+            console.log("Entra aquí");
             swal({
                 title: "Este nodo tiene hijos",
                 text: "¿Esta seguro que desea eliminar el nodo?",
