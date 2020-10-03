@@ -808,16 +808,21 @@ async function draw_tree(error, treeData) {
         //debugger;
         var str = parseInt($("#orienta").val());
 
-
-
-
         // svgGroup.selectAll("path.link").remove();
 
+        svgGroup.selectAll("line").remove();
 
         // Enter any new links at the parent's previous position.
-        var pata = link.enter().insert("path", "g")
+        var pata = link.enter()
+            //.insert("path", "g")
+            .insert("line", "g")
             .attr("class", "link")
             .attr("id", "mlink")
+            .attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; })
+            .attr("style", "fill:  blue ;")
             .attr('marker-end', function (d) {
 
                 //debugger
@@ -832,14 +837,15 @@ async function draw_tree(error, treeData) {
                 baseSvg.append("svg:defs").append("marker")
                     .attr("id", d.source.id + "-" + d.target.id)
                     .attr("viewBox", "0 -5 10 10")
-                    .attr('refX', 15)
-                    .attr("markerWidth", 5)
-                    .attr("style", "fill:  #D0D0D0 ;")
-                    .attr("markerHeight", 5)
-                    .attr("orient", orientT)
+                    .attr("refX", 15)
+                    .attr("refY", -1.5)
+                    .attr("markerWidth", 6)
+                    .attr("markerHeight", 6)
+                    .attr("style", "fill:  blue ;")
+                    .attr("orient", "auto")
                     .append("svg:path")
                     .attr("d", "M0,-5L10,0L0,5");
-                return "url(#" + d.source.id + "-" + d.target.id + ")";
+                    return "url(#" + d.source.id + "-" + d.target.id + ")";
             })
             .attr("d", function (d) {
 
@@ -917,10 +923,6 @@ async function draw_tree(error, treeData) {
             'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red',
             'silver', 'teal', 'white', 'yellow'];
 
-
-
-
-
         var colorNumber = 0;
         multiParents.forEach(function (multiPair) {
             color = colors[colorNumber];
@@ -933,24 +935,7 @@ async function draw_tree(error, treeData) {
                 .attr("style", "stroke: " + color + ";")
                 .attr('marker-end', function (d) {
                     var orient = "auto";
-
-
-                    baseSvg.append("svg:defs").append("svg:marker")
-                        .attr("id", multiPair.parent.id + "-" + multiPair.child.id)
-                        .attr("viewBox", "0 -5 10 10")
-                        .attr("style", "fill: " + color + ";")
-
-                        .attr('refX', 15)
-                        .attr("markerWidth", 5)
-                        .attr("markerHeight", 5)
-                        .attr("orient", orient)
-
-                        .append("svg:path")
-                        .attr("d", "M0,-5L10,0L0,5");
-
-
                     return "url(#" + multiPair.parent.id + "-" + multiPair.child.id + ")";
-
                 })
                 .attr("d", function () {
                     var oTarget;
