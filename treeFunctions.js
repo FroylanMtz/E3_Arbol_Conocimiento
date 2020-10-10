@@ -111,6 +111,7 @@ function createNodesList(tree_rootAux, level, ignore) {
 }
 
 function updateNodeToList() {
+
     var select = document.getElementById("nodesSelect");
 	var options= document.getElementById("nodesSelect").selectedIndex;
     var nodesSelectAllDelete = document.getElementById("nodesSelectAllDelete");
@@ -813,6 +814,54 @@ function loadQuestions(d) {
     });
 
     $('#QuestionModal').foundation('reveal', 'open');
+
+}
+
+function listarNodos(d){
+    let select = document.getElementById("nodesSelect");
+    let nodos = [];
+    let mensaje_uno = document.getElementById("mensaje_1");
+    $('#nodesSelect').empty().trigger("change");
+    mensaje_uno.innerHTML = "";
+    axios({
+        method: 'get',
+        url: "http://161.35.56.15/temas/posiblesNodosPadres/" + d.level2,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }).then(function (response) {
+        nodos = response.data[0];
+        for (var i = 0; i < nodos.length; i++) {
+            if (nodos[i].id == d.id) {
+                nodos.splice(i, 1)
+            }
+        }
+        axios({
+            method: 'get',
+            url: "http://161.35.56.15/temas/obtenerPadres/" + d.id,
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        }).then(function (response) {
+            let padres = response.data[0];
+            for(var j = 0; j < padres.length; j++){
+                for (var i = 0; i < nodos.length; i++) {
+                    if (nodos[i].id == padres[j].id_padre) {
+                        nodos.splice(i, 1)
+                    }
+                }
+            }
+            for (var i = 0; i < nodos.length; i++) {
+                var el = document.createElement("option");
+                el.textContent = nodos[i].nombre_tema;
+                el.value = nodos[i].id;
+                select.appendChild(el);
+            }
+            if( nodos.length == 0 ){
+                mensaje_uno.innerHTML = "Ya no hay nodos candidatos a ser padre";
+            }
+        }).catch(function (error) {
+            console.log('Error: ' + error)
+        });
+    }).catch(function (error) {
+        console.log('Error: ' + error)
+    });
 }
 
 

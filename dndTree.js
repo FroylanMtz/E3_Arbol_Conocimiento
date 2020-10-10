@@ -123,6 +123,7 @@ async function draw_tree(error, treeData) {
                 create_parent_modal_active = true;
                 $('#NewParentModal').foundation('reveal', 'open');
                 $('#CreateNodeName').focus();
+                listarNodos(d);
             }
         },
         {
@@ -216,7 +217,6 @@ async function draw_tree(error, treeData) {
 
     function zoom() {
         svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-
     }
 
 
@@ -480,7 +480,8 @@ async function draw_tree(error, treeData) {
                 return "#C0C0C0";//Gray
             }
         }
-        return "#03FD06";
+
+        return "#f2e711"; //#f2e711
     }
 
     // Function to update the temporary connector indicating dragging affiliation
@@ -565,25 +566,12 @@ async function draw_tree(error, treeData) {
         zoomListener.translate([x, y]);*/
     }
 
-
     // Toggle children on click.
-
     function click(d) {
-
-      
         if (!d3.event.defaultPrevented) {
-
-                console.log("CLICK2: ")
-
-                loadQuestions(d)
-            
-
-            // print("DEFAULT")
+            loadQuestions(d)
             return;
-        } // click suppressed
-        console.log("CLICK3: ")
-
-        // centerNode(d);
+        } 
     }
 
     function update(source) {
@@ -686,13 +674,15 @@ async function draw_tree(error, treeData) {
                 outCircle(node);
             });
 
+
         // Update the text to reflect whether node has children or not.
         node.select('text')
             .attr("x", function (d) {
                 if (d['textPosition']) {
                     return -5
                 }
-                return 10;
+                return 15;
+                //return -20
             })
             .attr('class', 'nodeTextCustom')
             .attr("text-anchor", function (d) {
@@ -731,7 +721,8 @@ async function draw_tree(error, treeData) {
             })
             .text(function (d) {
                 if (showNumber) {
-                    return Math.floor(Math.random() * 100);
+                    //return Math.floor(Math.random() * 100);
+                    return "0";
                 } else {
                     return "";
                 }
@@ -740,6 +731,8 @@ async function draw_tree(error, treeData) {
 
         // Change the circle fill depending on whether it has children and is collapsed
         node.select("circle.nodeCircle")
+            .attr("stroke","black")
+            .attr("stroke-width", "1")
             .attr("r", function (d) {
                 if (d['clasification'] != null) {
                     if (d['clasification'] == 1) {
@@ -754,9 +747,10 @@ async function draw_tree(error, treeData) {
                         return 4.5;
                     }
                 }
-                return 4.5;
+                //return 25;
+                return 10;
             })
-            .style("fill", colorNode);
+            .style("fill", "yellow");
 
         // Add a context menu
         node.on('contextmenu', d3.contextMenu(menu));
@@ -767,13 +761,9 @@ async function draw_tree(error, treeData) {
             .attr("transform", function (d) {
                 if (horizontalVertical) {
                     return "translate(" + d.y + "," + d.x + ")";
-
                 } else {
                     return "translate(" + d.x + "," + d.y + ")";
-
                 }
-
-
             });
 
         // Fade the text in
@@ -822,33 +812,22 @@ async function draw_tree(error, treeData) {
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; })
-            .attr("style", "fill:  blue ;")
+            .attr("style", "stroke:  black;")
             .attr('marker-end', function (d) {
-
-                //debugger
-                var angleDeg = Math.atan2(d.source.freey - d.target.freey, d.source.freex - d.target.freex) * 180 / Math.PI;
-                var distance = Math.sqrt(Math.pow(d.source.freex - d.target.freex, 2) + Math.pow(d.source.freey - d.target.freey, 2));
-
-                orientT = "auto"
-
-                console.log("ANGLE: " + angleDeg)
-                console.log("distance: " + distance)
-
                 baseSvg.append("svg:defs").append("marker")
                     .attr("id", d.source.id + "-" + d.target.id)
                     .attr("viewBox", "0 -5 10 10")
-                    .attr("refX", 15)
+                    .attr("refX", 20)
                     .attr("refY", -1.5)
                     .attr("markerWidth", 6)
                     .attr("markerHeight", 6)
-                    .attr("style", "fill:  blue ;")
+                    .attr("style", "fill:  red ;")
                     .attr("orient", "auto")
                     .append("svg:path")
                     .attr("d", "M0,-5L10,0L0,5");
                     return "url(#" + d.source.id + "-" + d.target.id + ")";
             })
             .attr("d", function (d) {
-
                 var o;
                 if (horizontalVertical) {
                     o = {
@@ -861,13 +840,12 @@ async function draw_tree(error, treeData) {
                         y: source.x0
                     };
                 }
-
-
                 return diagonal({
                     source: o,
                     target: o
                 });
             });
+
         // Transition links to their new position.
         link.transition()
             .duration(duration)
@@ -889,7 +867,6 @@ async function draw_tree(error, treeData) {
                         y: source.x
                     };
                 }
-
                 return diagonal({
                     source: o,
                     target: o
@@ -910,7 +887,7 @@ async function draw_tree(error, treeData) {
         });
 
 
-        d3.selectAll("path.additionalParentLink").remove();
+        //d3.selectAll("path.additionalParentLink").remove();
 
         var additionalParentLink = svgGroup.selectAll("path.additionalParentLink")
             .data(links, function (d) {
@@ -930,12 +907,51 @@ async function draw_tree(error, treeData) {
             if (colorNumber > 16) {
                 colorNumber = 0;
             }
-            svgGroup.append("path", "g")
+
+            /*svgGroup.insert("line", "g")
+            .attr("class", "link")
+            .attr("id", "mlink")
+            .attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; })
+            .attr("style", "stroke:  black;")
+            .attr('marker-end', function (d) {
+                baseSvg.append("svg:defs").append("marker")
+                    .attr("id", d.source.id + "-" + d.target.id)
+                    .attr("viewBox", "0 -5 10 10")
+                    .attr("refX", 15)
+                    .attr("refY", -1.5)
+                    .attr("markerWidth", 6)
+                    .attr("markerHeight", 6)
+                    .attr("style", "fill:  red ;")
+                    .attr("orient", "auto")
+                    .append("svg:path")
+                    .attr("d", "M0,-5L10,0L0,5");
+                    return "url(#" + d.source.id + "-" + d.target.id + ")";
+            })*/
+             svgGroup
+                //.append("path", "g")
+                .insert("line", "g")
                 .attr("class", "additionalParentLink")
                 .attr("style", "stroke: " + color + ";")
+                .attr("x1", multiPair.parent.y0)
+                .attr("y1", multiPair.parent.x0)
+                .attr("x2", multiPair.child.y0)
+                .attr("y2", multiPair.child.x0)
                 .attr('marker-end', function (d) {
-                    var orient = "auto";
-                    return "url(#" + multiPair.parent.id + "-" + multiPair.child.id + ")";
+                    baseSvg.append("svg:defs").append("marker")
+                        .attr("id", multiPair.parent.id + "-" + multiPair.child.id )
+                        .attr("viewBox", "0 -5 10 10")
+                        .attr("refX", 20)
+                        .attr("refY", -1.5)
+                        .attr("markerWidth", 6)
+                        .attr("markerHeight", 6)
+                        .attr("style", "fill:  red ;")
+                        .attr("orient", "auto")
+                        .append("svg:path")
+                        .attr("d", "M0,-5L10,0L0,5");
+                        return "url(#" + multiPair.parent.id + "-" + multiPair.child.id+ ")";
                 })
                 .attr("d", function () {
                     var oTarget;
