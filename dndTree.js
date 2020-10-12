@@ -31,6 +31,9 @@ var newPosition = [];
 
 outer_update = null;
 
+var color_nodos_primarios = [];
+var color_nodos_secundarios = [];
+
 
 
 async function draw_tree(error, treeData) {
@@ -62,6 +65,11 @@ async function draw_tree(error, treeData) {
 
     createExtraConectionStructure(treeData); // Carga del arbol a partir del json
 
+    //Obtener el color de los nodos
+    color_nodos = await obtenerColoresRelaciones();
+    color_nodos_primarios = color_nodos.relacionesPrimarias;
+    color_nodos_secundarios = color_nodos.relacionesSecundarias;
+    
     // define a d3 diagonal projection for use by the node paths later on.
     var diagonal = d3.svg.diagonal()
         .projection(function (d) {
@@ -288,14 +296,10 @@ async function draw_tree(error, treeData) {
             if (!horizontalVertical) {
                 var xA = d.x;
                 var yA = d.y;
-
                 var x0A = d.x0;
                 var y0A = d.y0;
-
-
                 d.x = yA;
                 d.y = xA;
-
                 d.x0 = y0A;
                 d.y0 = x0A;
 
@@ -574,18 +578,21 @@ async function draw_tree(error, treeData) {
         } 
     }
 
-    function update(source) {
+    async function update(source) {
 
+        //Obtener el color de los nodos
+        color_nodos = await obtenerColoresRelaciones();
+        color_nodos_primarios = color_nodos.relacionesPrimarias;
+        color_nodos_secundarios = color_nodos.relacionesSecundarias;
 
+        
         // Compute the new height, function counts total children of root node and sets tree height accordingly.
         // This prevents the layout looking squashed when new nodes are made visible or looking sparse when nodes are removed
         // This makes the layout more consistent.
         var levelWidth = [1];
         var childCount = function (level, n) {
-
             if (n.children && n.children.length > 0) {
                 if (levelWidth.length <= level + 1) levelWidth.push(0);
-
                 levelWidth[level + 1] += n.children.length;
                 n.children.forEach(function (d) {
                     childCount(level + 1, d);
@@ -605,15 +612,9 @@ async function draw_tree(error, treeData) {
 
             if (d["freey"] != undefined) {
                 d.y = d["freey"];
-
                 d.x = d["freex"];
-
-
             } else {
-
-
                 d.y = (d.depth * 100);
-
             }
 
         });
@@ -677,57 +678,55 @@ async function draw_tree(error, treeData) {
 
         // Update the text to reflect whether node has children or not.
         node.select('text')
-            .attr("x", function (d) {
+        .attr("x", function (d) {
+            if (d['textPosition']) {
+                return -5
+            }
+            return 15;
+            //return -20
+        })
+        .attr('class', 'nodeTextCustom')
+        .attr("text-anchor", function (d) {
+            if (d['textPosition']) {
+                return "end"
+            }
+            return "start";
+        })
+        .text(function (d) {
+            if (showNames) {
+                return d.name;
+            } else {
+                return "";
+            }
+        }).append('svg:tspan')
+        .attr('x', function (d) {
+            if (!showNames) {
                 if (d['textPosition']) {
                     return -5
                 }
-                return 15;
-                //return -20
-            })
-            .attr('class', 'nodeTextCustom')
-            .attr("text-anchor", function (d) {
-                if (d['textPosition']) {
-                    return "end"
-                }
-                return "start";
-            })
-            .text(function (d) {
-                if (showNames) {
-                    return d.name;
-                } else {
-                    return "";
-                }
-            }).append('svg:tspan')
-            .attr('x', function (d) {
-                if (!showNames) {
-                    if (d['textPosition']) {
-                        return -5
-                    }
-                    return 10;
-                }
-                var textLength = d['name'].length;
-                textLength = parseInt(textLength / 2) * 4;
-                if (d['textPosition']) {
-                    return -textLength
-                }
-                return 10 + textLength;
-            })
-            .attr('dy', function (d) {
-
-                if (!showNames) {
-                    return 3;
-                }
                 return 10;
-            })
-            .text(function (d) {
-                if (showNumber) {
-                    //return Math.floor(Math.random() * 100);
-                    return "0";
-                } else {
-                    return "";
-                }
-
-            });
+            }
+            var textLength = d['name'].length;
+            textLength = parseInt(textLength / 2) * 4;
+            if (d['textPosition']) {
+                return -textLength
+            }
+            return 10 + textLength;
+        })
+        .attr('dy', function (d) {
+            if (!showNames) {
+                return 3;
+            }
+            return 10;
+        })
+        .text(function (d) {
+            if (showNumber) {
+                //return Math.floor(Math.random() * 100);
+                return "0";
+            } else {
+                return "";
+            }
+        });
 
         // Change the circle fill depending on whether it has children and is collapsed
         node.select("circle.nodeCircle")
@@ -802,49 +801,94 @@ async function draw_tree(error, treeData) {
 
         svgGroup.selectAll("line").remove();
 
+        
+
         // Enter any new links at the parent's previous position.
         var pata = link.enter()
-            //.insert("path", "g")
-            .insert("line", "g")
-            .attr("class", "link")
-            .attr("id", "mlink")
-            .attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; })
-            .attr("style", "stroke:  black;")
-            .attr('marker-end', function (d) {
-                baseSvg.append("svg:defs").append("marker")
-                    .attr("id", d.source.id + "-" + d.target.id)
-                    .attr("viewBox", "0 -5 10 10")
-                    .attr("refX", 20)
-                    .attr("refY", -1.5)
-                    .attr("markerWidth", 6)
-                    .attr("markerHeight", 6)
-                    .attr("style", "fill:  red ;")
-                    .attr("orient", "auto")
-                    .append("svg:path")
-                    .attr("d", "M0,-5L10,0L0,5");
-                    return "url(#" + d.source.id + "-" + d.target.id + ")";
-            })
-            .attr("d", function (d) {
-                var o;
-                if (horizontalVertical) {
-                    o = {
-                        x: source.x0,
-                        y: source.y0
-                    };
-                } else {
-                    o = {
-                        x: source.y0,
-                        y: source.x0
-                    };
+        .insert("line", "g")
+        .attr("class", "link")
+        .attr("id","mlink")
+        .attr("x1", function(d) { 
+            if (horizontalVertical) {
+                return d.source.y;
+            }else{
+                return d.source.x; 
+            }
+            
+        })
+        .attr("y1", function(d) { 
+            if (horizontalVertical) {
+                return d.source.x;
+            }else{
+                return d.source.y;
+            }
+            
+        })
+        .attr("x2", function(d) { 
+            if (horizontalVertical) {
+                return d.target.y;
+            } else {
+                return d.target.x;
+            }
+            
+        })
+        .attr("y2", function(d) { 
+            if (horizontalVertical) {
+                return d.target.x;
+            }else {
+                return d.target.y;
+            }
+            
+        })
+        .attr("style", function (d) {
+            for(var i=0; i<color_nodos_primarios.length; i++){
+                if( (d.source.id + "" + d.target.id) == (color_nodos_primarios[i].id_padre + "" + color_nodos_primarios[i].id_hijo ) ){
+                    return "stroke:#" + color_nodos_primarios[i].color;
                 }
-                return diagonal({
-                    source: o,
-                    target: o
-                });
+            }
+
+            return "stroke:red";
+        })
+        .attr('marker-end', function (d) {
+            var color = "";
+            for(var i=0; i<color_nodos_primarios.length; i++){
+                if( (d.source.id + "" + d.target.id) == (color_nodos_primarios[i].id_padre + "" + color_nodos_primarios[i].id_hijo ) ){
+                    color = "#" + color_nodos_primarios[i].color;
+                }
+            }
+
+            baseSvg.append("svg:defs").append("marker")
+                .attr("id", d.source.id + "-" + d.target.id)
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 20)
+                .attr("refY", -1.5)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("style", "fill:" + color)
+                .attr("orient", "auto")
+                .append("svg:path")
+                .attr("d", "M0,-5L10,0L0,5");
+                return "url(#" + d.source.id + "-" + d.target.id + ")";
+        })
+        .attr("d", function (d) {
+            var o;
+            if (horizontalVertical) {
+                o = {
+                    x: source.x0,
+                    y: source.y0
+                };
+            } else {
+                o = {
+                    x: source.y0,
+                    y: source.x0
+                };
+            }
+            return diagonal({
+                source: o,
+                target: o
             });
+        })
+        .on("click", function(d) { click_conexion({padre:d.source.id, hijo:d.target.id}); });
 
         // Transition links to their new position.
         link.transition()
@@ -883,63 +927,42 @@ async function draw_tree(error, treeData) {
                 d.x0 = d.y;
                 d.y0 = d.x;
             }
-
         });
 
-
-        //d3.selectAll("path.additionalParentLink").remove();
-
         var additionalParentLink = svgGroup.selectAll("path.additionalParentLink")
-            .data(links, function (d) {
-                return d
-            });
-
+        .data(links, function (d) {
+            return d
+        });
 
         additionalParentLink.remove();
-        var colors = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
-            'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red',
-            'silver', 'teal', 'white', 'yellow'];
 
         var colorNumber = 0;
         multiParents.forEach(function (multiPair) {
-            color = colors[colorNumber];
-            colorNumber++;
-            if (colorNumber > 16) {
-                colorNumber = 0;
-            }
-
-            /*svgGroup.insert("line", "g")
-            .attr("class", "link")
-            .attr("id", "mlink")
-            .attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; })
-            .attr("style", "stroke:  black;")
-            .attr('marker-end', function (d) {
-                baseSvg.append("svg:defs").append("marker")
-                    .attr("id", d.source.id + "-" + d.target.id)
-                    .attr("viewBox", "0 -5 10 10")
-                    .attr("refX", 15)
-                    .attr("refY", -1.5)
-                    .attr("markerWidth", 6)
-                    .attr("markerHeight", 6)
-                    .attr("style", "fill:  red ;")
-                    .attr("orient", "auto")
-                    .append("svg:path")
-                    .attr("d", "M0,-5L10,0L0,5");
-                    return "url(#" + d.source.id + "-" + d.target.id + ")";
-            })*/
-             svgGroup
+            svgGroup
                 //.append("path", "g")
                 .insert("line", "g")
                 .attr("class", "additionalParentLink")
-                .attr("style", "stroke: " + color + ";")
+                .attr("style", function (d) {
+                    for(var i=0; i<color_nodos_secundarios.length; i++){
+                        if( (multiPair.parent.id + "" + multiPair.child.id) == (color_nodos_secundarios[i].id_padre + "" + color_nodos_secundarios[i].id_hijo ) ){
+                            return "stroke:#" + color_nodos_secundarios[i].color;
+                        }
+                    }
+        
+                    return "stroke:red";
+                })
                 .attr("x1", multiPair.parent.y0)
                 .attr("y1", multiPair.parent.x0)
                 .attr("x2", multiPair.child.y0)
                 .attr("y2", multiPair.child.x0)
                 .attr('marker-end', function (d) {
+                    let color_flecha = "";
+                    for(var i=0; i<color_nodos_secundarios.length; i++){
+                        if( (multiPair.parent.id + "" + multiPair.child.id) == (color_nodos_secundarios[i].id_padre + "" + color_nodos_secundarios[i].id_hijo ) ){
+                            color_flecha = "#" + color_nodos_secundarios[i].color;
+                        }
+                    }
+
                     baseSvg.append("svg:defs").append("marker")
                         .attr("id", multiPair.parent.id + "-" + multiPair.child.id )
                         .attr("viewBox", "0 -5 10 10")
@@ -947,7 +970,7 @@ async function draw_tree(error, treeData) {
                         .attr("refY", -1.5)
                         .attr("markerWidth", 6)
                         .attr("markerHeight", 6)
-                        .attr("style", "fill:  red ;")
+                        .attr("style", "fill: " + color_flecha + ";")
                         .attr("orient", "auto")
                         .append("svg:path")
                         .attr("d", "M0,-5L10,0L0,5");
@@ -976,14 +999,11 @@ async function draw_tree(error, treeData) {
                         };
                     }
 
-                    /*if (multiPair.child.depth === multiPair.couplingParent1.depth) {
-                        return "M" + oSource.y + " " + oSource.x + " L" + (oTarget.y + ((Math.abs((oTarget.x - oSource.x))) * 0.25)) + " " + oTarget.x + " " + oTarget.y + " " + oTarget.x;
-                    }*/
                     return diagonal({
                         source: oSource,
                         target: oTarget
                     });
-                });
+                }).on("click", function(d) { click_conexion({padre:multiPair.parent.id, hijo:multiPair.child.id }); });
         });
     }
 

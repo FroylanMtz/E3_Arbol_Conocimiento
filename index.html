@@ -68,13 +68,21 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="large-8 columns">
-								&nbsp;
-							</div>
-							<div class="large-4 columns">
+							
+
+							<br>
+							<span>Seleccione el color de la conexión: </span>
+							
+							<input type="color" id="colorNuevaConexion">
+
+
+							<div class="large-12 columns">
+								<center>
 								<a href="#" class="button info" onclick="close_create_node_modal()">Cancel</a>
 								<a href="#" class="button success" onclick="create_node()">Create</a>
+								</center>
 							</div>
+
 						</div>
 						</form>
 						<a class="close-reveal-modal" aria-label="Close">&#215;</a>
@@ -94,13 +102,17 @@
 
 								<span id="mensaje_1" style="color: red;"></span> 
 
+								<br>
+								<br>
+								<span>Seleccione el color de la conexión: </span>
+								
+								<input type="color" id="colorConexion">
+
 								<div class="row">
-									<div class="large-8 columns">
-										&nbsp;
-									</div>
-									<div class="large-4 columns">
+									<br>
+									<div class="large-12 columns">
 										<center>
-										<a href="#" class="button primary" onclick="createParentConection()">Crear conexión</a>
+										<a href="#" class="button primary padding-top-2" onclick="createParentConection()">Crear conexión</a>
 										</center>
 									</div>
 								</div>
@@ -175,6 +187,31 @@
 						</form>
 						<a class="close-reveal-modal" aria-label="Close">&#215;</a>
 					</div>
+
+
+					<!--MODAL PARA CAMBIAR DE COLOR AL NODO-->
+					<div id="CambiarColorConexion" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
+						role="dialog">
+						<h2 id="modalTitle">Cambiar color de conexión</h2>
+						<form id="RenameNodeForm">
+						<div class="row">
+							<input id="idConexion" value="" hidden/>
+							<br>
+							<span>Seleccione el nuevo color de la conexión: </span>
+							<input type="color" id="colorConexionNvo">
+						</div>
+						<div class="row">
+							<div class="large-8 columns">
+							&nbsp;
+							</div>
+							<div class="large-4 columns">
+							<a href="#" class="button success" onclick="guardarNuevoColor()">Guardar</a>
+							</div>
+						</div>
+						</form>
+						<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+					</div>
+
 				</div>
 			</div>
 		</div>
@@ -220,6 +257,7 @@
 					return false;
 			});
 			var treeJSON = d3.json("tree.json", draw_tree);
+			
 		});
 
 

@@ -50,7 +50,6 @@ function rename_node() {
 
 
 async function saveNewName(node_to_rename) {
-
     await axios({
         method: 'post',
         url: "http://161.35.56.15/tema/editarNodo/" + node_to_rename.id + "?id_nodo=" + node_to_rename.id + "&nombre_nodo=" + node_to_rename.name + "&textPosition=" + node_to_rename.textPosition,
@@ -77,8 +76,6 @@ function generateUUID() {
     return uuid;
 };
 
-
-
 function createNodesList(tree_rootAux, level, ignore) {
 
     if (ignore != null) {
@@ -95,9 +92,6 @@ function createNodesList(tree_rootAux, level, ignore) {
             name: tree_rootAux['name']
         });
     }
-
-
-
 
     tree_rootAux['level'] = level;
     if (tree_rootAux['children'] != undefined) {
@@ -177,6 +171,10 @@ function isFamily(nodeParent, nodeSon) {
 
 function createParentConection() {
 
+    var color = document.getElementById("colorConexion").value;
+
+    color = color.slice(1);
+
     outer_update(tree_root);
 		var op = document.getElementById('nodesSelect').options;
 		var i = document.getElementById('nodesSelect').selectedIndex;
@@ -211,7 +209,7 @@ function createParentConection() {
             parent: couplingParent,
             child: couplingChild
         })
-        registerParentConection(couplingParent, couplingChild);
+        registerParentConection(couplingParent, couplingChild, color);
         closeModal();
         outer_update(create_parent_relation);
     } else {
@@ -220,14 +218,15 @@ function createParentConection() {
 
 }
 
-function registerParentConection(parent, child) {
+function registerParentConection(parent, child, color) {
     axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/addsecundario?id_padre=" + parent.id + "&id_hijo=" + child.id,
+        url: "http://161.35.56.15/tema/addsecundario?id_padre=" + parent.id + "&id_hijo=" + child.id + "&color=" + color,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id_padre: parent.id,
             id_hijo: child.id,
+            color: color
         }
     }).then(function (response) {
 
@@ -542,13 +541,8 @@ function delete_node(node1) {
         deleteAllSons(node1.id);
         confirmDeleteNode(node1);
     }
-
-
-
-
-
-
 }
+
 function hacerHijoPadre(oldParent, newChildParent) {
     axios({
         method: 'post',
@@ -712,18 +706,23 @@ async function updatePosition(draggingNode) {
             id: draggingNode.id
         }
     }).then(function (response) {
-        console.log("funciono")
+        //console.log("funciono")
     }).catch(function (error) {
         console.log('Error: ' + error)
     })
 }
 
 async function createRequestNewNode(new_node) {
+
+    var color = document.getElementById("colorNuevaConexion").value;
+
+    color = color.slice(1);
+
     var newId;
     await axios({
         method: 'post',
         url: "http://161.35.56.15/tema/addTema?nombre_tema=" + new_node.name + "&nivel_tema=" + (create_node_parent.level2 + 1) + "&id_padre=" + create_node_parent.id +
-            "&freex=" + new_node.freex + "&freey=" + new_node.freey + "&textPosition=" + new_node.textPosition,
+            "&freex=" + new_node.freex + "&freey=" + new_node.freey + "&textPosition=" + new_node.textPosition + "&color=" + color,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             nombre_tema: new_node.name,
@@ -731,7 +730,8 @@ async function createRequestNewNode(new_node) {
             nivel_tema: create_node_parent.level2 + 1,
             freex: new_node.freex,
             freey: new_node.freey,
-            textPosition: new_node.textPosition
+            textPosition: new_node.textPosition,
+            color: color
 
         }
     }).then(function (response) {
@@ -763,10 +763,6 @@ async function getTreeFromBD() {
     }).catch(function (error) {
         console.log('Error: ' + error)
     });
-
-
-
-
 
     return treeData;
 }
@@ -864,5 +860,72 @@ function listarNodos(d){
     });
 }
 
+async  function obtenerColoresRelaciones(){
+
+    let respuesta = [];
+    let relaciones_primarias = [];
+    let relaciones_secundarias = [];
+    await axios({
+        method: 'get',
+        url: "http://161.35.56.15/tema/relacionesPrimarias",
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }).then(function (response) {
+
+        for(var i=0; i < response['data'].length; i++ ){
+            if( response['data'][i].tipo == "primarias" ){
+                relaciones_primarias.push(response['data'][i]);
+            }else{
+                relaciones_secundarias.push(response['data'][i]);
+            }
+        }
+
+        respuesta.relacionesPrimarias = relaciones_primarias;
+        respuesta.relacionesSecundarias = relaciones_secundarias;
+
+    }).catch(function (error) {
+        console.log('Error: ' + error)
+    });
 
 
+    return respuesta;
+}
+
+async function click_conexion(d){
+    $('#CambiarColorConexion').foundation('reveal', 'open');
+    document.getElementById("idConexion").value = d.padre + "-" + d.hijo;
+
+    /*$('#CambiarColorConexion').foundation('reveal', 'open');
+    console.log("id " + d.source.id + "-" + d.target.id);
+    document.getElementById("idConexion").value = "id " + d.source.id + "-" + d.target.id;*/
+    //console.log(d);
+}
+
+async function guardarNuevoColor(){
+    var nuevo_color = document.getElementById("colorConexionNvo").value;
+    var id_conexion = document.getElementById("idConexion").value;
+
+    nuevo_color = nuevo_color.slice(1);
+
+    console.log(nuevo_color);
+    console.log("Id conexion: " + document.getElementById("idConexion").value);
+
+    await axios({
+        method: 'post',
+        url: "http://161.35.56.15/tema/actualizarColor?id=" + id_conexion + "&color=" + nuevo_color,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: {
+            id: id_conexion,
+            color: nuevo_color
+        }
+    }).then(function (response) {
+        //debugger;
+        
+        console.log(response);
+        outer_update(tree_root);
+        closeModal();
+
+    }).catch(function (error) {
+        console.log('Error: ' + error)
+    })
+
+}
