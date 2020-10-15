@@ -85,7 +85,7 @@ async function draw_tree(error, treeData) {
 
     var menu = [
         {
-            title: 'Rename node',
+            title: 'Renombrar nodo',
             action: function (elm, d, i) {
                 $("#RenameNodeName").val(d.name);
                 //debugger;
@@ -99,7 +99,7 @@ async function draw_tree(error, treeData) {
             }
         },
         {
-            title: 'Delete node',
+            title: 'Eliminar nodo',
             action: function (elm, d, i) {
                 node_to_delete = d;
 
@@ -115,7 +115,7 @@ async function draw_tree(error, treeData) {
             }
         },
         {
-            title: 'Create child node',
+            title: 'Crear nodo hijo',
             action: function (elm, d, i) {
                 //debugger;
                 create_node_parent = d;
@@ -125,7 +125,7 @@ async function draw_tree(error, treeData) {
             }
         },
         {
-            title: 'Create parent conecction',
+            title: 'Crear conexión parental',
             action: function (elm, d, i) {
                 create_parent_relation = d;
                 create_parent_modal_active = true;
@@ -135,7 +135,7 @@ async function draw_tree(error, treeData) {
             }
         },
         {
-            title: 'Delete parent conecction',
+            title: 'Eliminar conexión parental',
             action: function (elm, d, i) {
                 create_node_parent = d;
                 create_node_modal_active = true;
