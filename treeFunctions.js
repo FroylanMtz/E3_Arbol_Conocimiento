@@ -243,37 +243,56 @@ function deleteParent() {
 		//if(op!=-1)
     //var nodeSelected = $('#deleteParentSelect').select2('data')
 
-    var index = -1;
+    /*var index = -1;
     for (var x = 0; x < multiParents.length; x++) {
         let child = multiParents[x].child;
         let parent = multiParents[x].parent;
 
         if (child['id'] == create_node_parent['id']) {
             if (parent['id'] == op[i].value) {
-                deleteParentDB(child, parent)
+                //deleteParentDB(child, parent)
                 index = x;
                 break;
             }
         }
+    }*/
+
+    for (var x = 0; x < lista_nodos_eliminar.length; x++) {
+        if( op[i].value == lista_nodos_eliminar[x].id_padre )
+        {
+            //console.log(lista_nodos_eliminar[x].id_padre, lista_nodos_eliminar[x].id_hijo, lista_nodos_eliminar[x].tipo);
+            deleteParentDB(lista_nodos_eliminar[x].id_hijo, lista_nodos_eliminar[x].id_padre,  lista_nodos_eliminar[x].tipo);
+        }
     }
-    if (index >= 0) {
+
+    /*if (index >= 0) {
         multiParents.splice(index, 1);
         closeModal();
         outer_update(tree_root);
-    }
+    }*/
+
+    
 }
 
-async function deleteParentDB(child, parent) {
+async function deleteParentDB(child, parent, tipo) {
+    var tipo_numerico = 1;
+    if(tipo == "secundarias"){
+        tipo_numerico = 2;
+    }
+
     await axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/deleteNodoSecundario?id_hijo=" + child.id + "&id_padre=" + parent.id,
+        url: "http://161.35.56.15/tema/deleteNodoSecundario?id_hijo=" + child + "&id_padre=" + parent + "&tipo=" + tipo_numerico,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id_hijo: child.id,
-            id_padre: parent.id
+            id_padre: parent.id,
+            tipo: tipo_numerico
         }
     }).then(function (response) {
-        console.log("funciono")
+        console.log("funciono");
+        console.log(response)
+        location.reload();
     }).catch(function (error) {
         console.log('Error: ' + error)
     })

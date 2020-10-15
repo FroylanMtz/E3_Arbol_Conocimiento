@@ -34,7 +34,8 @@ outer_update = null;
 var color_nodos_primarios = [];
 var color_nodos_secundarios = [];
 
-
+var ratio = 50;
+var lista_nodos_eliminar = [];
 
 async function draw_tree(error, treeData) {
     //debugger;
@@ -135,11 +136,48 @@ async function draw_tree(error, treeData) {
         },
         {
             title: 'Eliminar conexión parental',
-            action: function (elm, d, i) {
+            action: async function (elm, d, i) {
                 create_node_parent = d;
                 create_node_modal_active = true;
-
+                
+                let padres = [];
+                await axios({
+                    method: 'get',
+                    url: "http://161.35.56.15/temas/obtenerPadresConNombre/" + d.id,
+                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                }).then(function (response) {
+                    padres = response.data[0];
+                })
+                
+                lista_nodos_eliminar = padres;
+                
                 var selectParents = document.getElementById("deleteParentSelect");
+                var length = selectParents.options.length;
+                for (i = length - 1; i >= 0; i--) {
+                    selectParents.options[i] = null;
+                }
+                
+                var mensaje_dos = document.getElementById("mensaje_2");
+                    mensaje_dos.innerHTML = "";
+
+                if( padres.length == 1){
+                    mensaje_dos.innerHTML  = "Para eliminar un padre del nodo debe haber como minimo dos padres";
+                }else{
+
+                    for (var x = 0; x < padres.length; x++) {
+                        var optName = padres[x].nombrePadre;
+                        var optId = padres[x].id_padre;
+                        var el = document.createElement("option");
+                        el.textContent = optName;
+                        el.value = optId;
+                        selectParents.appendChild(el);
+                    }
+
+                }
+                
+
+
+                /*var selectParents = document.getElementById("deleteParentSelect");
                 var length = selectParents.options.length;
                 for (i = length - 1; i >= 0; i--) {
                     selectParents.options[i] = null;
@@ -155,7 +193,8 @@ async function draw_tree(error, treeData) {
                         el.value = optId;
                         selectParents.appendChild(el);
                     }
-                }
+                }*/
+
                 $('#DeleteParentModal').foundation('reveal', 'open');
                 $('#CreateNodeName').focus();
             }
@@ -678,13 +717,17 @@ async function draw_tree(error, treeData) {
         // Update the text to reflect whether node has children or not.
         node.select('text')
         .attr("x", function (d) {
+
+            // 0 , 1
+            // si hay 0 entra en la condicion
             if (d['textPosition']) {
                 return -5
             }
-            return 15;
-            //return -20
+            //return 15;
+            return -ratio + 5;
         })
         .attr('class', 'nodeTextCustom')
+        .attr('style', 'font-size: ' + (18 * ratio ) / 55 + ";") //Calcular la relacion de aspecto
         .attr("text-anchor", function (d) {
             if (d['textPosition']) {
                 return "end"
@@ -698,6 +741,9 @@ async function draw_tree(error, treeData) {
                 return "";
             }
         }).append('svg:tspan')
+
+        .attr('style', 'font-size: 18px;')
+
         .attr('x', function (d) {
             if (!showNames) {
                 if (d['textPosition']) {
@@ -716,7 +762,7 @@ async function draw_tree(error, treeData) {
             if (!showNames) {
                 return 3;
             }
-            return 10;
+            return 15;
         })
         .text(function (d) {
             if (showNumber) {
@@ -731,7 +777,8 @@ async function draw_tree(error, treeData) {
         node.select("circle.nodeCircle")
             .attr("stroke","black")
             .attr("stroke-width", "1")
-            .attr("r", function (d) {
+            .attr("r", ratio)
+            /*.attr("r", function (d) {
                 if (d['clasification'] != null) {
                     if (d['clasification'] == 1) {
                         return 8;
@@ -747,7 +794,7 @@ async function draw_tree(error, treeData) {
                 }
                 //return 25;
                 return 10;
-            })
+            })*/
             .style("fill", "yellow");
 
         // Add a context menu
@@ -842,11 +889,11 @@ async function draw_tree(error, treeData) {
         .attr("style", function (d) {
             for(var i=0; i<color_nodos_primarios.length; i++){
                 if( (d.source.id + "" + d.target.id) == (color_nodos_primarios[i].id_padre + "" + color_nodos_primarios[i].id_hijo ) ){
-                    return "stroke:#" + color_nodos_primarios[i].color;
+                    return "stroke:#" + color_nodos_primarios[i].color +";stroke-width:" + (3*ratio)/50;
                 }
             }
 
-            return "stroke:red";
+            return "stroke:red;"+"stroke-width:" + (3*ratio)/50;
         })
         .attr('marker-end', function (d) {
             var color = "";
@@ -859,7 +906,7 @@ async function draw_tree(error, treeData) {
             baseSvg.append("svg:defs").append("marker")
                 .attr("id", d.source.id + "-" + d.target.id)
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 20)
+                .attr("refX", (37 * ratio)/ 50 )
                 .attr("refY", -1.5)
                 .attr("markerWidth", 6)
                 .attr("markerHeight", 6)
@@ -944,11 +991,11 @@ async function draw_tree(error, treeData) {
                 .attr("style", function (d) {
                     for(var i=0; i<color_nodos_secundarios.length; i++){
                         if( (multiPair.parent.id + "" + multiPair.child.id) == (color_nodos_secundarios[i].id_padre + "" + color_nodos_secundarios[i].id_hijo ) ){
-                            return "stroke:#" + color_nodos_secundarios[i].color;
+                            return "stroke:#" + color_nodos_secundarios[i].color +";stroke-width:" + (3*ratio)/50;;
                         }
                     }
         
-                    return "stroke:red";
+                    return "stroke:red" +";stroke-width:" + (3*ratio)/50;;
                 })
                 .attr("x1", multiPair.parent.y0)
                 .attr("y1", multiPair.parent.x0)
@@ -965,7 +1012,7 @@ async function draw_tree(error, treeData) {
                     baseSvg.append("svg:defs").append("marker")
                         .attr("id", multiPair.parent.id + "-" + multiPair.child.id )
                         .attr("viewBox", "0 -5 10 10")
-                        .attr("refX", 20)
+                        .attr("refX", (37 * ratio)/ 50 )
                         .attr("refY", -1.5)
                         .attr("markerWidth", 6)
                         .attr("markerHeight", 6)
