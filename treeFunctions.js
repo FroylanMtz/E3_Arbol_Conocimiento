@@ -924,3 +924,9 @@ async function guardarNuevoColor(){
     })
 
 }
+
+// Cambiar el tamaño de los nodos
+async function sizeNode(){
+    ratio = $('#slider').attr('data-slider');
+    outer_update(tree_root);
+}
