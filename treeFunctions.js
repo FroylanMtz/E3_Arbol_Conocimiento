@@ -392,8 +392,6 @@ function makeListSons(node) {
 }
 
 function delete_node(node1) {
-
-
 		var op= document.getElementById('optionsDelete').options;
 		var index= document.getElementById('optionsDelete').selectedIndex;
 		console.log(op[index].index+" opciones")
@@ -541,6 +539,7 @@ function delete_node(node1) {
         deleteAllSons(node1.id);
         confirmDeleteNode(node1);
     }
+    closeModal();
 }
 
 function hacerHijoPadre(oldParent, newChildParent) {
@@ -628,12 +627,8 @@ function confirmDeleteNode(node1) {
         });
 
     updateNodeToList();
-
-
-
-
-
 }
+
 
 function getAllNodesDeleted(node1) {
     var index = -1;

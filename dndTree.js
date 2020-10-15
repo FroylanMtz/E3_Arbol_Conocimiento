@@ -110,8 +110,7 @@ async function draw_tree(error, treeData) {
 
                 $('#DeleteNodeModal').foundation('reveal', 'open');
 
-
-                // delete_node(d);
+                //delete_node(d);
             }
         },
         {
