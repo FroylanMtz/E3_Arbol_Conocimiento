@@ -907,11 +907,6 @@ async  function obtenerColoresRelaciones(){
 async function click_conexion(d){
     $('#CambiarColorConexion').foundation('reveal', 'open');
     document.getElementById("idConexion").value = d.padre + "-" + d.hijo;
-
-    /*$('#CambiarColorConexion').foundation('reveal', 'open');
-    console.log("id " + d.source.id + "-" + d.target.id);
-    document.getElementById("idConexion").value = "id " + d.source.id + "-" + d.target.id;*/
-    //console.log(d);
 }
 
 async function guardarNuevoColor(){
@@ -920,8 +915,6 @@ async function guardarNuevoColor(){
 
     nuevo_color = nuevo_color.slice(1);
 
-    console.log(nuevo_color);
-    console.log("Id conexion: " + document.getElementById("idConexion").value);
 
     await axios({
         method: 'post',
@@ -933,10 +926,10 @@ async function guardarNuevoColor(){
         }
     }).then(function (response) {
         //debugger;
-        
-        console.log(response);
         outer_update(tree_root);
         closeModal();
+        //cristian();
+        //location.reload();
 
     }).catch(function (error) {
         console.log('Error: ' + error)
