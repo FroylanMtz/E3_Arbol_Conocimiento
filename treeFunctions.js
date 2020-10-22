@@ -21,49 +21,61 @@ function close_delete_node_modal(){
 function rename_node() {
     let hasDuplicated = false;
 
-    if (node_to_rename && rename_node_modal_active) {
+    var name = $('#RenameNodeName').val();
+    
+    var primer_char = name.charAt(0);
 
-        name = $('#RenameNodeName').val();
+    if(name == "" || primer_char == '1' || primer_char == '2' || primer_char == '3'  || primer_char == '4' || primer_char == '5' || primer_char == '6' || primer_char == '7' || primer_char == '8' || primer_char == '8' || primer_char == '9' || primer_char == '0'){
+        
+        $('#mensaje_3').text("Por favor ingresa un nombre valido")
+    }else{
 
-        hasDuplicated = checkhasDuplicated(name, node_to_rename.id);
+        if (node_to_rename && rename_node_modal_active) {
+
+            name = $('#RenameNodeName').val();
+
+            hasDuplicated = checkhasDuplicated(name, node_to_rename.id);
 
 
 
-        if (hasDuplicated) {
-            swal({
-                title: "Ya existe un nodo llamado así",
-                text: "¿Esta seguro que desea renombrar el nodo actual?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        node_to_rename.name = name;
-                        node_to_rename.textPosition = textPosition ? 1 : 0;
-                        rename_node_modal_active = false;
-                        textPosition = false;
-                        saveNewName(node_to_rename)
-                    }
+            if (hasDuplicated) {
+                swal({
+                    title: "Ya existe un nodo llamado así",
+                    text: "¿Esta seguro que desea renombrar el nodo actual?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            node_to_rename.name = name;
+                            node_to_rename.textPosition = textPosition ? 1 : 0;
+                            rename_node_modal_active = false;
+                            textPosition = false;
+                            saveNewName(node_to_rename)
+                        }
 
-                    closeModal();
-                    outer_update(node_to_rename);
-                });
+                        closeModal();
+                        outer_update(node_to_rename);
+                    });
+            }
+
+            if (!hasDuplicated) {
+                node_to_rename.name = name;
+                rename_node_modal_active = false;
+                node_to_rename.textPosition = textPosition ? 1 : 0;
+                textPosition = false;
+                saveNewName(node_to_rename)
+            }
+
         }
 
         if (!hasDuplicated) {
-            node_to_rename.name = name;
-            rename_node_modal_active = false;
-            node_to_rename.textPosition = textPosition ? 1 : 0;
-            textPosition = false;
-            saveNewName(node_to_rename)
+            
+            closeModal();
+            outer_update(node_to_rename);
         }
 
-    }
-
-    if (!hasDuplicated) {
-        closeModal();
-        outer_update(node_to_rename);
     }
 
 }
@@ -321,26 +333,35 @@ async function deleteParentDB(child, parent, tipo) {
 function create_node() {
     name = $('#CreateNodeName').val();
 
-    let hasDuplicated = checkhasDuplicated(name, null);
+    var primer_char = name.charAt(0);
 
-    if (hasDuplicated) {
-        swal({
-            title: "Ya existe un nodo llamado así",
-            text: "¿Esta seguro que desea crear nuevo el nodo?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-            .then((willDelete) => {
-                if (willDelete) {
-                    confirmCreateNode(name)
-                }
+    
+    if(name == "" || primer_char == '1' || primer_char == '2' || primer_char == '3'  || primer_char == '4' || primer_char == '5' || primer_char == '6' || primer_char == '7' || primer_char == '8' || primer_char == '8' || primer_char == '9' || primer_char == '0'){
+        $('#mensaje_4').text("Por favor ingresa un nombre valido")
+    }else{
 
-            });
-    } else {
-        confirmCreateNode(name)
+        let hasDuplicated = checkhasDuplicated(name, null);
+
+        if (hasDuplicated) {
+            swal({
+                title: "Ya existe un nodo llamado así",
+                text: "¿Esta seguro que desea crear nuevo el nodo?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        confirmCreateNode(name)
+                    }
+
+                });
+        } else {
+            confirmCreateNode(name)
+        }
     }
 }
+
 
 async function confirmCreateNode(name) {
     if (create_node_parent && create_node_modal_active) {
@@ -946,7 +967,7 @@ async function guardarNuevoColor(){
         }
     }).then(function (response) {
         //debugger;
-        outer_update(tree_root);
+        location.reload();
         closeModal();
         //cristian();
         //location.reload();
@@ -1001,7 +1022,7 @@ async function getSizeNode(){
         //Actualizando el radio
         ratio = respuesta[0]['radio']
         //Renderizando el arbol
-        outer_update(tree_root);
+        //outer_update(tree_root);
         $('#slider').foundation('slider', 'set_value', ratio);
         console.log(respuesta[0]['radio']);
 
