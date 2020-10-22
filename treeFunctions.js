@@ -1,3 +1,23 @@
+function close_rename_node_modal(){
+    closeModal();
+}
+
+function close_create_node_modal(){
+    closeModal();
+}
+
+function close_delete_parent_node_modal(){
+    closeModal();
+}
+
+function close_create_parent_node_modal(){
+    closeModal();
+}
+
+function close_delete_node_modal(){
+    closeModal();
+}
+
 function rename_node() {
     let hasDuplicated = false;
 
