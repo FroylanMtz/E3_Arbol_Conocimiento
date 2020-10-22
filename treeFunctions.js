@@ -962,3 +962,52 @@ async function sizeNode(){
     ratio = $('#slider').attr('data-slider');
     outer_update(tree_root);
 }
+
+// Cambiar el tamaño de los nodos
+async function updateSizeNode(){
+    ratio = $('#slider').attr('data-slider');
+
+    await axios({
+        method: 'post',
+        url: "http://161.35.56.15/tema/actualizarRadio/" + ratio,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: {
+            radio: ratio
+        }
+    }).then(function (response) {
+        //debugger;
+        //console.log(response);
+        console.log(ratio)
+        console.log('SE ACTUALIZO')
+        outer_update(tree_root);
+    
+    }).catch(function (error) {
+        console.log('Error: ' + error)
+    })
+
+    outer_update(tree_root);
+}
+
+// Obtener el radio de la base de datos
+async function getSizeNode(){
+    let respuesta;
+    await axios({
+        method: 'get',
+        url: "http://161.35.56.15/tema/obtenerRadio",
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }).then(function (response) {
+        //Obteniendo la data
+        respuesta = response['data'][0];
+        //Actualizando el radio
+        ratio = respuesta[0]['radio']
+        //Renderizando el arbol
+        outer_update(tree_root);
+        $('#slider').foundation('slider', 'set_value', ratio);
+        console.log(respuesta[0]['radio']);
+
+    }).catch(function (error) {
+        console.log('Error: ' + error)
+    });
+
+    return respuesta[0]['radio'];
+}
