@@ -628,7 +628,7 @@ async function draw_tree(error, treeData) {
         color_nodos_secundarios = color_nodos.relacionesSecundarias;
 
         //d3.selectAll("defs").remove();
-        //d3.selectAll("marker").remove();
+        d3.selectAll("marker").remove();
 
         
         // Compute the new height, function counts total children of root node and sets tree height accordingly.
@@ -914,8 +914,8 @@ async function draw_tree(error, treeData) {
             baseSvg.append("marker")
                 .attr("id", d.source.id + "-" + d.target.id)
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", ratio / 1.35 ) //  50 / ?   = 37
-                .attr("refY", -1.5)
+                .attr("refX", 37) //  50 / ?   = 37
+                .attr("refY", 0)
                 .attr("markerWidth", 6)
                 .attr("markerHeight", 6)
                 .attr("style", "fill:" + color)
@@ -1023,7 +1023,7 @@ async function draw_tree(error, treeData) {
                     baseSvg.append("svg:defs").append("marker")
                         .attr("id", multiPair.parent.id + "-" + multiPair.child.id )
                         .attr("viewBox", "0 -5 10 10")
-                        .attr("refX", (37 * ratio)/ 50 )
+                        .attr("refX", 37 )
                         .attr("refY", -1.5)
                         .attr("markerWidth", 6)
                         .attr("markerHeight", 6)

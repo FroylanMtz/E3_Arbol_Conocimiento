@@ -967,7 +967,7 @@ async function guardarNuevoColor(){
         }
     }).then(function (response) {
         //debugger;
-        location.reload();
+        outer_update(tree_root);
         closeModal();
         //cristian();
         //location.reload();
