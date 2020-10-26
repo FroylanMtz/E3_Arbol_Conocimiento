@@ -1032,3 +1032,55 @@ async function getSizeNode(){
 
     return respuesta[0]['radio'];
 }
+
+//Obtener los alumnos
+async function getStudents(){
+    let respuesta;
+    await axios({
+        method: 'get',
+        url: "http://161.35.56.15/user/obtenerAlumnos",
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }).then(function (response) {
+        //Obteniendo la data
+        respuesta = response['data'][0];
+
+
+
+    }).catch(function (error) {
+        console.log('Error: ' + error)
+    });
+
+
+    var selectStudents = document.getElementById("studentSelect");
+
+    for (var x = 0; x < respuesta.length; x++) {
+        var optName = respuesta[x].nombre;
+        var optId = respuesta[x].id;
+        var el = document.createElement("option");
+        el.textContent = optName;
+        el.value = optId;
+        selectStudents.appendChild(el);
+    }
+
+    return respuesta;
+}
+
+//Obtener el arbol del alumno 
+async function getStudentTree(){
+    var id_alumno = document.getElementById("studentSelect").value;
+
+    let respuesta;
+    await axios({
+        method: 'get',
+        url: "http://161.35.56.15/user/obtenerArbol/"+id_alumno,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }).then(function (response) {
+        //Obteniendo la data
+        respuesta = response['data'][0];
+
+        console.log(respuesta);
+    }).catch(function (error) {
+        console.log('Error: ' + error)
+    });
+
+}

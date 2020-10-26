@@ -28,6 +28,13 @@
 <body>
 	<div class="container-scroller">
 		<div class="main-panel">
+
+			<select id="studentSelect" class="js-example-basic-multiple" style="width:50%">
+				<option value="modelo"> Modelo </option>
+			</select>
+
+			<a class="button success" onclick="getStudentTree()"> Obtener arbol </a>
+
 			<div class="row">
 				<div class="col-md-12 grid-margin">	
 					<!--MODAL PARA RENOMBRAR NODO-->
@@ -272,12 +279,12 @@
 				element.focus();
 			});
 			$('#RenameNodeForm').submit(function(e){
-					rename_node();
-					return false;
+					//rename_node();
+					//return false;
 			});
 			$('#CreateNodeForm').submit(function(e){
-					create_node();
-					return false;
+					//create_node();
+					//return false;
 			});
 			var treeJSON = d3.json("tree.json", draw_tree);
 			
