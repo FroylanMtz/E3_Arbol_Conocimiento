@@ -178,9 +178,6 @@ async function draw_tree(error, treeData) {
                     }
 
                 }
-                
-
-
                 /*var selectParents = document.getElementById("deleteParentSelect");
                 var length = selectParents.options.length;
                 for (i = length - 1; i >= 0; i--) {
@@ -202,7 +199,26 @@ async function draw_tree(error, treeData) {
                 $('#DeleteParentModal').foundation('reveal', 'open');
                 $('#CreateNodeName').focus();
             }
+        },
+        {
+            title: 'Cambiar conexión parental',
+            action: function (elm, d, i) {
+                create_parent_relation = d;
+                create_parent_modal_active = true;
+                $('#CambiarConexionPadre').foundation('reveal', 'open');
+               
+                var select_conexion = document.getElementById("childrenSelect");
+                var children = document.createElement("option");
+                // console.log(d);
+                children.textContent = d.name;
+                children.value = d.id;
+                select_conexion.appendChild(children);
+
+                $('#CreateNodeName').focus();
+                listarNodosPadre(d);
+            }
         }
+
     ]
 
 

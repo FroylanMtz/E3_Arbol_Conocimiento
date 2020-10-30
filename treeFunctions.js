@@ -1,4 +1,4 @@
-function close_rename_node_modal(){
+    function close_rename_node_modal(){
     closeModal();
 }
 
@@ -635,6 +635,25 @@ function cambiarPadre(nodeToChange, newParent) {
     })
 }
 
+function actualizarPadre(oldParent, newParent, children ,color) {
+    axios({
+        method: 'post',
+        url: "http://161.35.56.15/tema/cambiarPadre/" + oldParent + "?id=" + oldParent + "&id2=" + newParent + "&hijo=" + children  + "&color=" + color,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: {
+            id: oldParent,
+            id2: newParent,
+            hijo: children,
+            color: color
+        }
+    }).then(function (response) {
+        console.log(response)
+        console.log("funciono")
+    }).catch(function (error) {
+        console.log('Error: ' + error)
+    })
+}
+
 function deleteandcambiarPadre(oldParent, newParent) {
     axios({
         method: 'post',
@@ -915,6 +934,77 @@ function listarNodos(d){
     });
 }
 
+function listarNodosPadre(d){
+    let select = document.getElementById("newParent");
+    let nodos = [];
+    let mensaje_uno = document.getElementById("mensaje_1");
+    $('#newParent').empty().trigger("change");
+    mensaje_uno.innerHTML = "";
+    axios({
+        method: 'get',
+        url: "http://161.35.56.15/temas/posiblesNodosPadres/" + d.level2,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }).then(function (response) {
+        nodos = response.data[0];
+        for (var i = 0; i < nodos.length; i++) {
+            if (nodos[i].id == d.id) {
+                nodos.splice(i, 1)
+            }
+        }
+        axios({
+            method: 'get',
+            url: "http://161.35.56.15/temas/obtenerPadres/" + d.id,
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        }).then(function (response) {
+            let padres = response.data[0];
+            for(var j = 0; j < padres.length; j++){
+                for (var i = 0; i < nodos.length; i++) {
+                    if (nodos[i].id == padres[j].id_padre) {
+                        nodos.splice(i, 1)
+                    }
+                }
+            }
+            for (var i = 0; i < nodos.length; i++) {
+                var el = document.createElement("option");
+                el.textContent = nodos[i].nombre_tema;
+                el.value = nodos[i].id;
+                select.appendChild(el);
+            }
+            if( nodos.length == 0 ){
+                mensaje_uno.innerHTML = "Ya no hay nodos candidatos a ser padre";
+            }
+        }).catch(function (error) {
+            console.log('Error: ' + error)
+        });
+    }).catch(function (error) {
+        console.log('Error: ' + error)
+    });
+
+    var select_conexion = document.getElementById("oldParent");
+    $('#oldParent').empty().trigger("change");
+    axios({
+    method: 'get',
+    url: "http://161.35.56.15/obtenerConexiones/" + d.id,
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    }).then(function (response) {
+    let conexiones = response.data[0];
+
+    for (var i = 0; i < conexiones.length; i++) {
+        var el = document.createElement("option");
+        el.textContent = conexiones[i].nombre_tema;
+        el.value = conexiones[i].id_padre;
+        select_conexion.appendChild(el);
+    }
+
+    if( conexiones.length == 0 ){
+        mensaje_uno.innerHTML = "Ya no hay nodos candidatos a ser padre";
+    }
+    }).catch(function (error) {
+    console.log('Error: ' + error)
+    });
+
+}
+
 async  function obtenerColoresRelaciones(){
 
     let respuesta = [];
@@ -1083,4 +1173,16 @@ async function getStudentTree(){
         console.log('Error: ' + error)
     });
 
+}
+
+async function changeParent(){
+    var oldParent = document.getElementById("oldParentSelect").value;
+    var newParent = document.getElementById("newParentSelect").value;
+    var children = document.getElementById("childrenSelect").value;
+    var color = document.getElementById("colorParentConnection").value;
+    color = color.slice(1);
+
+    actualizarPadre(oldParent, newParent, children ,color);
+    closeModal();
+    location.reload();
 }
