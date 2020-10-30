@@ -935,10 +935,10 @@ function listarNodos(d){
 }
 
 function listarNodosPadre(d){
-    let select = document.getElementById("newParent");
+    let select = document.getElementById("newParentSelect");
     let nodos = [];
     let mensaje_uno = document.getElementById("mensaje_1");
-    $('#newParent').empty().trigger("change");
+    $('#newParentSelect').empty().trigger("change");
     mensaje_uno.innerHTML = "";
     axios({
         method: 'get',
@@ -980,8 +980,8 @@ function listarNodosPadre(d){
         console.log('Error: ' + error)
     });
 
-    var select_conexion = document.getElementById("oldParent");
-    $('#oldParent').empty().trigger("change");
+    var select_conexion = document.getElementById("oldParentSelect");
+    $('#oldParentSelect').empty().trigger("change");
     axios({
     method: 'get',
     url: "http://161.35.56.15/obtenerConexiones/" + d.id,
