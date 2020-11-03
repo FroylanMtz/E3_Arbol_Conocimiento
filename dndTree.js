@@ -62,8 +62,8 @@ async function draw_tree(error, treeData) {
     var root;
 
     // size of the diagram
-    var viewerWidth = $(document).width();
-    var viewerHeight = $(document).height();
+    var viewerWidth = $(document).width() * 1;
+    var viewerHeight = $(document).height() * 1;
 
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
@@ -178,23 +178,6 @@ async function draw_tree(error, treeData) {
                     }
 
                 }
-                /*var selectParents = document.getElementById("deleteParentSelect");
-                var length = selectParents.options.length;
-                for (i = length - 1; i >= 0; i--) {
-                    selectParents.options[i] = null;
-                }
-                for (var x = 0; x < multiParents.length; x++) {
-                    let child = multiParents[x].child;
-                    if (child['id'] == create_node_parent['id']) {
-                        let parent = multiParents[x].parent;
-                        var optName = parent['name'];
-                        var optId = parent['id'];
-                        var el = document.createElement("option");
-                        el.textContent = optName;
-                        el.value = optId;
-                        selectParents.appendChild(el);
-                    }
-                }*/
 
                 $('#DeleteParentModal').foundation('reveal', 'open');
                 $('#CreateNodeName').focus();
@@ -296,41 +279,14 @@ async function draw_tree(error, treeData) {
         draggingNode['contacB'] = 2;
 
         d3.select(domNode).select('.ghostCircle').attr('pointer-events', 'none');
-        d3.selectAll('.ghostCircle').attr('class', 'ghostCircle show');
+        //d3.selectAll('.ghostCircle').attr('class', 'ghostCircle show');
         d3.select(domNode).attr('class', 'node activeDrag');
 
         svgGroup.selectAll("g.node").sort(function (a, b) { // select the parent and sort the path's
             if (a.id != draggingNode.id) return 1; // a is not the hovered element, send "a" to the back
             else return -1; // a is the hovered element, bring "a" to the front
         });
-        // if nodes has children, remove the links and nodes
-        if (nodes.length > 1) {
-            // remove link paths
-            links = tree.links(nodes);
-            nodePaths = svgGroup.selectAll("path.link")
-                .data(links, function (d) {
-                    return d.target.id;
-                }).remove();
-            // remove child nodes
-            nodesExit = svgGroup.selectAll("g.node")
-                .data(nodes, function (d) {
-                    return d.id;
-                }).filter(function (d, i) {
-                    if (d.id == draggingNode.id) {
-                        return false;
-                    }
-                    return true;
-                }).remove();
-        }
 
-        // remove parent link
-        parentLink = tree.links(tree.nodes(draggingNode.parent));
-        svgGroup.selectAll('path.link').filter(function (d, i) {
-            if (d.target.id == draggingNode.id) {
-                return true;
-            }
-            return false;
-        }).remove();
 
         dragStarted = null;
     }
@@ -343,7 +299,7 @@ async function draw_tree(error, treeData) {
     baseSvg.append("rect")
         .attr("width", "100%")
         .attr("height", "100%")
-        .attr("fill", "#E5E5E5")
+        .attr("fill", "white")
 
     baseSvg.call(zoomListener);
 
@@ -360,108 +316,49 @@ async function draw_tree(error, treeData) {
                 d.y = xA;
                 d.x0 = y0A;
                 d.y0 = x0A;
-
             }
-
             if (d == root) {
                 return;
             }
             dragStarted = true;
             nodes = tree.nodes(d);
-
             d3.event.sourceEvent.stopPropagation();
-            // it's important that we suppress the mouseover event on the node being dragged. Otherwise it will absorb the mouseover event and the underlying node will not detect it d3.select(this).attr('pointer-events', 'none');
         })
         .on("drag", function (d) {
-            // d['contacB'] = 0;
             if (d == root) {
                 return;
             }
             if (dragStarted) {
-
                 domNode = this;
                 initiateDrag(d, domNode);
             }
 
             var node = d3.select(this);
             if (!horizontalVertical) {
-
                 d.y0 += d3.event.dy;
                 d.x0 += d3.event.dx;
                 node.attr("transform", "translate(" + d.x0 + "," + d.y0 + ")");
             } else {
-
-
                 d.x0 += d3.event.dy;
                 d.y0 += d3.event.dx;
                 node.attr("transform", "translate(" + d.y0 + "," + d.x0 + ")");
             }
             newPosition = [];
-
             newPosition.push(d.y0)
             newPosition.push(d.x0)
-
-
             updateTempConnector();
-        }).on("dragend", function (d) {
 
+        }).on("dragend", function (d) {
             if (d == root) {
                 return;
             }
             domNode = this;
-            if (selectedNode) {
-
-                let index1 = -1;
-                let x = -1;
-
-                multiParents.forEach(function (d) {
-                    index1++;
-                    if ((d.parent.id == selectedNode.id && d.child.id == draggingNode.id) || (d.parent.id == draggingNode.id && d.child.id == selectedNode.id)) {
-                        x = index1;
-                    }
-                });
-
-
-                if (x >= 0) {
-                    multiParents.splice(x, 1);
-                }
-
-
-
-                // now remove the element from the parent, and insert it into the new elements children
-                var index = draggingNode.parent.children.indexOf(draggingNode);
-                if (index > -1) {
-                    draggingNode.parent.children.splice(index, 1);
-                }
-
-
-                if (typeof selectedNode.children !== 'undefined' || typeof selectedNode._children !== 'undefined') {
-                    if (typeof selectedNode.children !== 'undefined') {
-                        selectedNode.children.push(draggingNode);
-                    } else {
-                        selectedNode._children.push(draggingNode);
-                    }
-
-
-                } else {
-
-
-                    selectedNode.children = [];
-                    selectedNode.children.push(draggingNode);
-                }
-                cambiarPadre(draggingNode, selectedNode);
-                endDrag();
-            } else {
-
-                if (draggingNode) {
-                    draggingNode['freey'] = newPosition[0];
-                    draggingNode['freex'] = newPosition[1];
-
-                    updatePosition(draggingNode);
-                }
-
-                endDrag();
+            if (draggingNode) {
+                draggingNode['freey'] = newPosition[0];
+                draggingNode['freex'] = newPosition[1];
+                updatePosition(draggingNode);
             }
+            endDrag();
         });
 
     function endDrag() {
