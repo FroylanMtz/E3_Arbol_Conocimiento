@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>KMS</title>
+
+	<link href="foundation.css" rel="stylesheet"> </link>
+	
+	<link rel="stylesheet" href="./app.css" type="text/css" media="all" />
+
+	<link rel="stylesheet" href="./d3-context-menu.css" type="text/css" media="all" />
+
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+
+	<!--<script src="https://kit.fontawesome.com/4e3c5501e7.js" crossorigin="anonymous"></script>-->
+
+	<!--
+		{{style('arbol/foundation.css')}} 
+		{{style('arbol/app.css')}} 
+	{{style('arbol/d3-context-menu.css')}} 
+	{{style('arbol/select2.css')}}-->
+
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div class="main-panel">
+
+			
+			
+
+			<div id="tree-container" style="width: 100%">
+
+				<div style="background-color: white; width: 100%;">
+					
+					<table style="width: 50%; float: left; ">
+						<tr>
+						<td style="width: 20%"> <b> Vista </b> </td>
+						<td> <input type="checkbox" class="custom-control-input" id="horizontalVertical">
+							<label class="custom-control-label" for="horizontalVertical">Horizontal</label> </td>
+						</tr>
+					
+						<tr>
+							<td> <b> Tamaño del nodo </b></td>
+							<td>
+								<div class="small-10 medium-11 columns">
+									<div class="range-slider" id="slider" onclick="updateSizeNode()" data-slider data-options="display_selector: #sliderOutput3;">
+									<span class="range-slider-handle" role="slider" tabindex="0"></span>
+									<span class="range-slider-active-segment"> <span id="sliderOutput3"></span> </span>
+									</div>
+								</div>
+								<div class="small-2 medium-1 columns">
+									<span id="sliderOutput3"></span>
+								</div>
+							</td>
+						</tr>
+						
+					</table>
+				</div>
+			</div>
+
+			
+
+			<div class="row">
+				<div class="col-md-12">	
+					<div id="RenameNodeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
+						role="dialog">
+						<h2 id="modalTitle">Renombrar Nodo</h2>
+						<form id="RenameNodeForm">
+						<div class="row">
+							<div class="large-12 columns">
+							<label>Nombre del nodo
+								<input type="text" class="inputName" id='RenameNodeName' placeholder="nombre del nodo" />
+
+								<p id="mensaje_3" style="color: red;"></p>
+							</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-8 columns">
+							&nbsp;
+							</div>
+							<div class="large-4 columns">
+							<a href="#" class="button info" onclick="close_rename_node_modal()">Cancelar</a>
+							<a href="#" class="button success" onclick="rename_node()">Renombrar</a>
+							</div>
+						</div>
+						</form>
+						<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+					</div>
+
+					<!--MODAL PARA CEAR NODO-->
+					<div id="CreateNodeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
+						role="dialog">
+						<h2 id="modalTitle">Crear Nodo</h2>
+						<form id="CreateNodeForm">
+						<div class="row">
+							<div class="large-12 columns">
+							<label>Nombre del nodo
+								<input type="text" class="inputName" id='CreateNodeName' placeholder="nombre del nodo" />
+
+								<p id="mensaje_4" style="color: red;"></p>
+
+							</label>
+							</div>
+						</div>
+						<div class="row">
+							
+
+							<br>
+							<span>Seleccione el color de la conexión: </span>
+							
+							<input type="color" id="colorNuevaConexion">
+
+
+							<div class="large-12 columns">
+								<center>
+								<a href="#" class="button info" onclick="close_create_node_modal()">Cancelar</a>
+								<a href="#" class="button success" onclick="create_node()">Crear</a>
+								</center>
+							</div>
+
+						</div>
+						</form>
+						<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+					</div>
+					<!--MODAL PARA AÑADIR UN NUEVO PADRE AL NODO-->
+
+					<div id="NewParentModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
+						role="dialog">
+
+						<div class="grid-container">
+							<div class="grid-x grid-padding-x">
+								<span>Elija un nodo:</span>
+
+								
+								<select id="nodesSelect" class="js-example-basic-multiple" style="width:100%">
+								</select>
+
+								<span id="mensaje_1" style="color: red;"></span> 
+
+								<br>
+								<br>
+								<span>Seleccione el color de la conexión: </span>
+								
+								<input type="color" id="colorConexion">
+
+								<div class="row">
+									<br>
+									<div class="large-12 columns">
+										<center>
+										<a href="#" class="button info" onclick="close_create_parent_node_modal()">Cancelar</a>	
+										<a href="#" class="button primary padding-top-2" onclick="createParentConection()">Crear conexión</a>
+										</center>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+						
+					<!--MODAL PARA BORRAR UN  PADRE AL NODO-->
+					<div id="DeleteParentModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
+						role="dialog">
+
+						<span>Selecciona el nodo: </span>
+						<select id="deleteParentSelect" class="js-example-basic-multiple" style="width:50%">
+						</select>
+
+						<br>
+						<span id="mensaje_2" style="color: red;"></span> 
+						<br>
+
+						<div class="row">
+						<div class="large-8 columns">
+							&nbsp;
+						</div>
+						<div class="large-4 columns">
+							<a href="#" class="button info" onclick="close_delete_parent_node_modal()">Cancelar</a>
+							<a href="#" class="button success" onclick="deleteParent()">Eliminar</a>
+						</div>
+						</div>
+					</div>
+						
+					<div id="DeleteNodeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
+						role="dialog">
+
+						<select id="optionsDelete" class="js-example-basic-multiple" style="width:50%">
+						<option value="1">Borrar Todos</option>
+						<option value="2">Hacer padre al abuelo</option>
+						<option value="3">Cambiar de padre a un hijo</option>
+						<option value="4">Cambiar de padre</option>
+						</select>
+
+						<select id="nodesSelectAllDelete" name="selectName" class="js-example-basic-multiple" style="width:50%">
+						</select>
+
+
+						<select id="nodesSelectChildNewParent" name="selectName" class="js-example-basic-multiple" style="width:50%">
+						</select>
+
+
+						<div class="row">
+						<div class="large-8 columns">
+							&nbsp;
+						</div>
+						<div class="large-4 columns">
+							<a href="#" class="button info" onclick="close_delete_node_modal()">Cancelar</a>
+							<a href="#" class="button success" onclick="delete_node(node_to_delete)">Aceptar</a>
+						</div>
+						</div>
+					</div>
+
+					
+				
+					<!--MODAL PARA PREGUNTAS-->
+					<div id="QuestionModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
+						role="dialog">
+						<h2 id="modalTitle">Preguntas</h2>
+						<form id="QuestionForm">
+
+						<div>
+							<ol id="questionList">
+							</ol>
+						</div>
+						</form>
+						<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+					</div>
+
+
+					<!--MODAL PARA CAMBIAR DE COLOR AL NODO-->
+					<div id="CambiarColorConexion" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
+						role="dialog">
+						<h2 id="modalTitle">Cambiar color de conexión</h2>
+						<form id="RenameNodeForm">
+						<div class="row">
+							<input id="idConexion" value="" hidden/>
+							<br>
+							<span>Seleccione el nuevo color de la conexión: </span>
+							<input type="color" id="colorConexionNvo">
+						</div>
+						<div class="row">
+							<div class="large-8 columns">
+							&nbsp;
+							</div>
+							<div class="large-4 columns">
+							<a href="#" class="button success" onclick="guardarNuevoColor()">Guardar</a>
+							</div>
+						</div>
+						</form>
+						<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+					</div>
+
+					<!--MODAL PARA CAMBIAR Y ELIMINAR CONEXIÓN PARENTAL-->
+					<div id="CambiarConexionPadre" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
+						role="dialog">
+
+						<div class="grid-container">
+							<div class="grid-x grid-padding-x">
+								<span>Nodo seleccionado:</span>
+								<select id="childrenSelect" class="js-example-basic-multiple" style="width:100%" disabled></select>
+								<br>
+								<br>
+								<span>Elija el nodo padre a cambiar:</span>
+		
+								<select id="oldParentSelect" class="js-example-basic-multiple" style="width:100%"></select>
+
+								<span id="mensaje_1" style="color: red;"></span> 
+								<br>
+								<br>
+								<span>Elija el nuevo padre:</span>
+								
+								<select id="newParentSelect" class="js-example-basic-multiple" style="width:100%"></select>
+
+								<br>
+								<br>
+								<span>Seleccione el color de la conexión: </span>
+								
+								<input type="color" id="colorParentConnection">
+
+								<div class="row">
+									<br>
+									<div class="large-12 columns">
+										<center>
+										<a href="#" class="button info" onclick="close_create_parent_node_modal()">Cancelar</a>	
+										<a href="#" class="button primary padding-top-2" onclick="changeParent()">Crear conexión</a>
+										</center>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<script src="jquery.js" type="text/javascript"> </script>
+	<script src="d3.v3.min.js" type="text/javascript"> </script>
+	<script src="https://d3plus.org/js/d3plus.v2.0.0-alpha.29.full.min.js"></script>
+	<script src="treeFunctions.js" type="text/javascript"> </script>
+	<script src="dndTree.js" type="text/javascript"> </script>
+	<script src="d3-context-menu.js" type="text/javascript"> </script>
+	<script src="underscore-min.js" type="text/javascript"> </script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js" type="text/javascript"> </script>
+	<script src="jquery.js" type="text/javascript"> </script>
+	<script src="fastclick.js" type="text/javascript"> </script>
+
+	<script src="foundation.min.js" type="text/javascript"> </script>
+	
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js" type="text/javascript"> </script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" type="text/javascript"> </script>
+
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+	<script>
+		// for the first initialization
+		$('document').ready(function(){
+			cristian();
+			$(document).foundation();
+			$(document).on('opened', '[data-reveal]', function () {
+				var element = $(".inputName:visible").first();
+				element.focus(function(){
+					this.selectionStart = this.selectionEnd = this.value.length;
+				});
+				element.focus();
+			});
+			$('#RenameNodeForm').submit(function(e){
+					//rename_node();
+					//return false;
+			});
+			$('#CreateNodeForm').submit(function(e){
+					//create_node();
+					//return false;
+			});
+			var treeJSON = d3.json("tree.json", draw_tree);
+			
+		});
+
+
+		function cristian(){
+
+$('.js-example-basic-multiple').select2();
+
+$('#nodesSelect').select2();
+
+$('#nodesSelectAllDelete').select2();
+$('#nodesSelectChildNewParent').select2();
+$('#nodesSelectAllDelete').next(".select2-container").hide();
+$('#nodesSelectChildNewParent').next(".select2-container").hide();
+
+$("#horizontalVertical").change(function (e) {
+	// alert("Handler for .change() called. ");
+
+	horizontalVertical = !horizontalVertical;
+	outer_update(tree_root);
+
+});
+
+
+
+$("#textPosition").change(function (e) {
+	textPosition = !textPosition;
+});
+
+
+$("#textPositionRename").change(function (e) {
+	textPosition = !textPosition;
+});
+
+$("#orienta").change(function (e) {
+	outer_update(tree_root);
+
+});
+
+$("#showNames").change(function (e) {
+	showNames = !showNames;
+	outer_update(tree_root);
+
+});
+
+$("#showNumber").change(function (e) {
+	showNumber = !showNumber;
+
+	outer_update(tree_root);
+
+});
+
+
+
+var $optionsDelete = $("#optionsDelete").select2().on("change", function (e) {
+
+	var optionsS = $('#optionsDelete').select2('data')
+	let deleteOption = optionsS[0]['id'];
+	if (deleteOption == 4) {
+		$('#nodesSelectAllDelete').next(".select2-container").show();
+		$('#nodesSelectChildNewParent').next(".select2-container").hide();
+
+	} else if (deleteOption == 3) {
+		$('#nodesSelectChildNewParent').next(".select2-container").show();
+		$('#nodesSelectAllDelete').next(".select2-container").hide();
+	} else {
+		$('#nodesSelectAllDelete').next(".select2-container").hide();
+		$('#nodesSelectChildNewParent').next(".select2-container").hide();
+
+	}
+	
+});
+
+
+		$(document).foundation();
+		$(document).on('opened', '[data-reveal]', function () {
+			var element = $(".inputName:visible").first();
+			element.focus(function () {
+				this.selectionStart = this.selectionEnd = this.value.length;
+			});
+			element.focus();
+		});
+		$('#RenameNodeForm').submit(function (e) {
+			rename_node();
+			return false;
+		});
+		$('#CreateNodeForm').submit(function (e) {
+			create_node();
+			return false;
+		});
+		/*$("/public/arbol/d3.v3.min.js", function(){
+		var treeJSON = d3.json("tree.json", draw_tree);
+		});*/
+		
+							
+		}
+	</script>
+
+</body>
+
+</html>

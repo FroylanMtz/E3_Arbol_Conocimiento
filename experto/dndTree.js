@@ -40,7 +40,7 @@ async function draw_tree(error, treeData) {
     //debugger;
     await getSizeNode();
     
-    await getStudents();
+
     
     $('#slider').foundation('slider', 'set_value', ratio);
     treeData = await getTreeFromBD(); // Await espera a que se termine de ejecutar la funcion para continuar a las demas lineas

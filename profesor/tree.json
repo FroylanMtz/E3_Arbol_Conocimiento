@@ -1,0 +1,388 @@
+{
+    "id": 1,
+    "name": "Mathematics",
+    "depth": 1,
+    "level": 1,
+    "level2": 1,
+
+    "children": [
+        {
+            "id": 18,
+            "name": "Algebra",
+            "depth": 2,
+            "level": 2,
+            "level2": 2
+        },
+        {
+            "id": 19,
+            "name": "Arithmetic",
+            "depth": 2,
+            "level": 2,
+            "level2": 2,
+            "children": [
+                {
+                    "id": 24,
+                    "name": "Numbers",
+                    "depth": 3,
+                    "level": 3,
+                    "level2": 3,
+                    "children": [
+                        {
+                            "id": 25,
+                            "name": "Equality and inequality",
+                            "depth": 4,
+                            "level": 4,
+                            "level2": 4,
+                            "children": [
+                                {
+                                    "id": 36,
+                                    "name": "Add and subtracting",
+                                    "depth": 5,
+                                    "level": 5,
+                                    "level2": 5,
+                                    "children": [
+                                        {
+                                            "id": 42,
+                                            "name": "Multiplication",
+                                            "depth": 6,
+                                            "level": 6,
+                                            "level2": 6,
+                                            "children": [
+                                                {
+                                                    "id": 43,
+                                                    "name": "Powers",
+                                                    "depth": 7,
+                                                    "level": 7,
+                                                    "level2": 7,
+                                                    "children": [
+                                                        {
+                                                            "id": 50,
+                                                            "name": "Equations",
+                                                            "depth": 8,
+                                                            "level": 8,
+                                                            "level2": 8,
+                                                            "children": [
+                                                                {
+                                                                    "id": 51,
+                                                                    "name": "Arrays",
+                                                                    "depth": 9,
+                                                                    "level": 9,
+                                                                    "level2": 9,
+                                                                    "children": [
+                                                                        {
+                                                                            "id": 52,
+                                                                            "name": "Matrices",
+                                                                            "depth": 10,
+                                                                            "clasification": 3,
+                                                                            "level": 10,
+                                                                            "level2": 10,
+                                                                            "children": [
+                                                                                {
+                                                                                    "id": 53,
+                                                                                    "name": "Determinants",
+                                                                                    "depth": 11,
+                                                                                    "clasification": 3,
+                                                                                    "level": 11,
+                                                                                    "level2": 11
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "id": 47,
+                                                            "name": "Radicals",
+                                                            "depth": 8,
+                                                            "level": 8,
+                                                            "level2": 8,
+                                                            "children": [
+                                                                {
+                                                                    "id": 48,
+                                                                    "name": "Root",
+                                                                    "clasification": 1,
+                                                                    "depth": 9,
+                                                                    "level": 9,
+                                                                    "level2": 9,
+                                                                    "children": [
+                                                                        {
+                                                                            "id": 49,
+                                                                            "name": "Complex Numbers",
+                                                                            "depth": 10,
+                                                                            "level": 10,
+                                                                            "level2": 10
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "id": 45,
+                                                    "name": "Division",
+                                                    "depth": 7,
+                                                    "level": 7,
+                                                    "level2": 7,
+                                                    "children": [
+                                                        {
+                                                            "id": 46,
+                                                            "name": "Fractions",
+                                                            "depth": 8,
+                                                            "level": 8,
+                                                            "level2": 8
+                                                        },
+                                                        {
+                                                            "id": 54,
+                                                            "name": "Permutations",
+                                                            "depth": 8,
+                                                            "level": 8,
+                                                            "level2": 8,
+                                                            "children": [
+                                                                {
+                                                                    "id": 55,
+                                                                    "name": "Combinations",
+                                                                    "depth": 9,
+                                                                    "level": 9,
+                                                                    "level2": 9,
+                                                                    "children": [
+                                                                        {
+                                                                            "id": 56,
+                                                                            "name": "Conjunctions",
+                                                                            "clasification": 1,
+                                                                            "depth": 10,
+                                                                            "level": 10,
+                                                                            "level2": 10,
+                                                                            "children": [
+                                                                                {
+                                                                                    "id": 57,
+                                                                                    "name": "Binomial Distribution",
+                                                                                    "depth": 11,
+                                                                                    "level": 11,
+                                                                                    "level2": 11,
+                                                                                    "children": [
+                                                                                        {
+                                                                                            "id": 58,
+                                                                                            "name": "Bayes Theorem",
+                                                                                            "depth": 12,
+                                                                                            "level": 12,
+                                                                                            "level2": 12,
+                                                                                            "children": [
+                                                                                                {
+                                                                                                    "id": 59,
+                                                                                                    "name": "Statistics",
+                                                                                                    "depth": 13,
+                                                                                                    "level": 13,
+                                                                                                    "level2": 13
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 20,
+            "name": "Probability and statistics",
+            "depth": 2,
+            "level": 2,
+            "level2": 2,
+            "children": [
+                {
+                    "id": 26,
+                    "name": "Generality",
+                    "depth": 3,
+                    "level": 3,
+                    "level2": 3,
+                    "children": [
+                        {
+                            "id": 44,
+                            "name": "Variables",
+                            "depth": 4,
+                            "level": 4,
+                            "level2": 4,
+                            "children": [
+                                {
+                                    "id": 60,
+                                    "name": "Inequalities",
+                                    "clasification": 1,
+                                    "depth": 5,
+                                    "level": 5,
+                                    "level2": 5,
+                                    "children": [
+                                        {
+                                            "id": 62,
+                                            "name": "Least Common Multiple",
+                                            "depth": 6,
+                                            "level": 6,
+                                            "level2": 6,
+                                            "children": [
+                                                {
+                                                    "id": 63,
+                                                    "name": "Functions",
+                                                    "depth": 7,
+                                                    "level": 7,
+                                                    "level2": 7
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "xa": 582,
+                                            "ya": 636,
+                                            "id": 61,
+                                            "name": "Greatest common factor",
+                                            "depth": 6,
+                                            "level": 6,
+                                            "level2": 6
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 21,
+            "name": "Geometry",
+            "depth": 2,
+            "level": 2,
+            "level2": 2,
+            "children": [
+                {
+                    "id": 29,
+                    "name": "Angles",
+                    "depth": 3,
+                    "level": 3,
+                    "level2": 3,
+                    "children": [
+                        {
+                            "id": 30,
+                            "name": "Polygons",
+                            "depth": 4,
+                            "clasification": 5,
+                            "level": 4,
+                            "level2": 4,
+                            "children": [
+                                {
+                                    "id": 35,
+                                    "name": "Circumference",
+                                    "clasification": 5,
+                                    "depth": 5,
+                                    "level": 5,
+                                    "level2": 5
+                                }
+                            ]
+                        },
+                        {
+                            "id": 64,
+                            "name": "Triangles",
+                            "clasification": 1,
+                            "depth": 4,
+                            "level": 4,
+                            "level2": 4,
+                            "children": [
+                                {
+                                    "id": 65,
+                                    "name": "Trigonometric Functions",
+                                    "depth": 5,
+                                    "level": 5,
+                                    "level2": 5,
+                                    "children": [
+                                        {
+                                            "id": 66,
+                                            "name": "Trigonometric identities",
+                                            "depth": 6,
+                                            "level": 6,
+                                            "level2": 6,
+                                            "children": [
+                                                {
+                                                    "id": 67,
+                                                    "name": "Sine and cosine",
+                                                    "depth": 7,
+                                                    "level": 7,
+                                                    "level2": 7,
+                                                    "children": [
+                                                        {
+                                                            "id": 68,
+                                                            "name": "Areas",
+                                                            "clasification": 3,
+                                                            "depth": 8,
+                                                            "level": 8,
+                                                            "level2": 8,
+                                                            "children": [
+                                                                {
+                                                                    "id": 69,
+                                                                    "name": "Logarithmc Equations",
+                                                                    "depth": 9,
+                                                                    "clasification": 3,
+                                                                    "level": 9,
+                                                                    "level2": 9
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 22,
+            "name": "Trigonometry",
+            "depth": 2,
+            "level": 2,
+            "level2": 2
+        },
+        {
+            "id": 23,
+            "name": "Calculus",
+            "depth": 2,
+            "level": 2,
+            "level2": 2,
+            "children": [
+                {
+                    "id": 27,
+                    "name": "Limits",
+                    "depth": 3,
+                    "level": 3,
+                    "level2": 3,
+                    "children": [
+                        {
+                            "id": 28,
+                            "name": "Derivates",
+                            "clasification": 1,
+                            "depth": 4,
+                            "level": 4,
+                            "level2": 4
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
