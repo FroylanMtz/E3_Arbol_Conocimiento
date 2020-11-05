@@ -1168,11 +1168,14 @@ async function getStudentTree(){
         //Obteniendo la data
         respuesta = response['data'][0];
 
-        console.log(respuesta);
+        arbol_alumno = respuesta;
+       // console.log(respuesta);
     }).catch(function (error) {
         console.log('Error: ' + error)
     });
 
+    outer_update(tree_root);
+    return respuesta;
 }
 
 async function changeParent(){

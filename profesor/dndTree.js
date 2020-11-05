@@ -36,6 +36,8 @@ outer_update = null;
 var ratio = 0;
 var lista_nodos_eliminar = [];
 
+var arbol_alumno = [];
+
 async function draw_tree(error, treeData) {
     //debugger;
     await getSizeNode();
@@ -426,6 +428,7 @@ async function draw_tree(error, treeData) {
     // color a node properly
     function colorNode(d) {
 
+        //console.log(d);
         if (d['clasification'] != null) {
             if (d['clasification'] == 1) {
                 return "#00FAFB"//"blue";
@@ -535,6 +538,8 @@ async function draw_tree(error, treeData) {
 
     async function update(source) {
 
+        console.log(arbol_alumno);
+
         //Obtener el color de los nodos
         var color_nodos_primarios = [];
         var color_nodos_secundarios = [];
@@ -607,7 +612,7 @@ async function draw_tree(error, treeData) {
         nodeEnter.append("circle")
             .attr('class', 'nodeCircle')
             .attr("r", 3)
-            .style("fill", colorNode);
+            
 
         nodeEnter.append("text")
             .attr("x", function (d) {
@@ -677,9 +682,23 @@ async function draw_tree(error, treeData) {
         .attr('y', -ratio/2)
         .text(function (d) {
             if (showNumber) {
-                //AQUI SE ASIGNA EL VALOR
-                //return Math.floor(Math.random() * 100);
-                return "0";
+
+                
+                for(var i = 0; i < arbol_alumno.length; i++ ){
+
+                    if(arbol_alumno[i].clasificacion == 6 && arbol_alumno[i].id_tema == d.id){
+                        return "";
+                    }
+
+                    if(arbol_alumno[i].id_tema == d.id ){
+                        d.clasificacion = arbol_alumno[i].clasificacion;
+                        d.ponderacion = arbol_alumno[i].ponderacion;
+
+                        return arbol_alumno[i].ponderacion;
+                    }
+                    
+                }
+
             } else {
                 return "";
             }
@@ -721,7 +740,71 @@ async function draw_tree(error, treeData) {
             .attr("stroke","black")
             .attr("stroke-width", "1")
             .attr("r", ratio)
-            .style("fill", "yellow");
+            .style("fill", function(d){
+                
+                console.log(arbol_alumno);
+
+                for(var i = 0; i < arbol_alumno.length; i++ ){
+
+                    if(arbol_alumno[i].id_tema == d.id ){
+                        
+                        d.clasificacion = arbol_alumno[i].clasificacion;
+                        d.ponderacion = arbol_alumno[i].ponderacion;
+
+                        // 1  Objetivo  Azul celeste         
+                        // 2  Subjetivo   Verde  
+                        // 3  Subjetivo lejano  Amarillo 
+                        // 4  Subjetivo virgen  Gris
+                        // 5  Virgen            Negro
+                        // 6  No clasificable   Morado
+
+                        switch ( Number(arbol_alumno[i].clasificacion)) {
+                            case 1:
+                                return "#00BCD4"
+                                break; 
+                        
+                            case 2:
+                                return "#8BC34A"
+                                break;
+
+                            case 3:
+                                return "#FFC107"
+                                break;
+
+                            case 4:
+                                return "#9E9E9E"
+                                break;
+
+                            case 5:
+                                return "#212121"
+                                break;
+                            
+                            case 6:
+                                return "#607D8B"
+                                break;
+                        }
+                    }
+                }
+
+                
+            });
+
+            
+
+            /*.style("fill", function(d){
+                console.log("Desde fill");
+                for(var i = 0; i < arbol_alumno.length; i++ ){
+
+                    if(arbol_alumno[i].id_tema == d.id ){
+                        d.clasificacion = arbol_alumno[i].clasificacion;
+                        d.ponderacion = arbol_alumno[i].ponderacion;
+
+                        //return arbol_alumno[i].ponderacion;
+                        return "red";
+                    }
+                }
+
+            });*/
 
         // Add a context menu
         //node.on('contextmenu', d3.contextMenu(menu));

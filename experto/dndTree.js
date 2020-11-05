@@ -677,8 +677,9 @@ async function draw_tree(error, treeData) {
         .attr('y', -ratio/2)
         .text(function (d) {
             if (showNumber) {
-                return Math.floor(Math.random() * 100);
+                //return Math.floor(Math.random() * 100);
                 //return "0";
+                return "";
             } else {
                 return "";
             }
@@ -720,7 +721,7 @@ async function draw_tree(error, treeData) {
             .attr("stroke","black")
             .attr("stroke-width", "1")
             .attr("r", ratio)
-            .style("fill", "yellow");
+            .style("fill", "#FFC107");
 
         // Add a context menu
         node.on('contextmenu', d3.contextMenu(menu));
