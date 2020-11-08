@@ -84,7 +84,7 @@ function rename_node() {
 async function saveNewName(node_to_rename) {
     await axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/editarNodo/" + node_to_rename.id + "?id_nodo=" + node_to_rename.id + "&nombre_nodo=" + node_to_rename.name + "&textPosition=" + node_to_rename.textPosition,
+        url: "http://159.65.223.220/tema/editarNodo/" + node_to_rename.id + "?id_nodo=" + node_to_rename.id + "&nombre_nodo=" + node_to_rename.name + "&textPosition=" + node_to_rename.textPosition,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id_nodo: node_to_rename.id,
@@ -253,7 +253,7 @@ function createParentConection() {
 function registerParentConection(parent, child, color) {
     axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/addsecundario?id_padre=" + parent.id + "&id_hijo=" + child.id + "&color=" + color,
+        url: "http://159.65.223.220/tema/addsecundario?id_padre=" + parent.id + "&id_hijo=" + child.id + "&color=" + color,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id_padre: parent.id,
@@ -314,7 +314,7 @@ async function deleteParentDB(child, parent, tipo) {
 
     await axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/deleteNodoSecundario?id_hijo=" + child + "&id_padre=" + parent + "&tipo=" + tipo_numerico,
+        url: "http://159.65.223.220/tema/deleteNodoSecundario?id_hijo=" + child + "&id_padre=" + parent + "&tipo=" + tipo_numerico,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id_hijo: child.id,
@@ -605,7 +605,7 @@ function delete_node(node1) {
 function hacerHijoPadre(oldParent, newChildParent) {
     axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/hacerHijoPadre/" + oldParent.id + "?id=" + oldParent.id + "&id2=" + newChildParent.id,
+        url: "http://159.65.223.220/tema/hacerHijoPadre/" + oldParent.id + "?id=" + oldParent.id + "&id2=" + newChildParent.id,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id: oldParent.id,
@@ -622,7 +622,7 @@ function hacerHijoPadre(oldParent, newChildParent) {
 function cambiarPadre(nodeToChange, newParent) {
     axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/cambiarPadre/" + nodeToChange.id + "?id=" + nodeToChange.id + "&id2=" + newParent.id,
+        url: "http://159.65.223.220/tema/cambiarPadre/" + nodeToChange.id + "?id=" + nodeToChange.id + "&id2=" + newParent.id,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id: nodeToChange.id,
@@ -638,7 +638,7 @@ function cambiarPadre(nodeToChange, newParent) {
 function actualizarPadre(oldParent, newParent, children ,color) {
     axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/cambiarPadre/" + oldParent + "?id=" + oldParent + "&id2=" + newParent + "&hijo=" + children  + "&color=" + color,
+        url: "http://159.65.223.220/tema/cambiarPadre/" + oldParent + "?id=" + oldParent + "&id2=" + newParent + "&hijo=" + children  + "&color=" + color,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id: oldParent,
@@ -657,7 +657,7 @@ function actualizarPadre(oldParent, newParent, children ,color) {
 function deleteandcambiarPadre(oldParent, newParent) {
     axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/deleteandcambiarPadre/" + oldParent.id + "?id=" + oldParent.id + "&id2=" + newParent.id,
+        url: "http://159.65.223.220/tema/deleteandcambiarPadre/" + oldParent.id + "?id=" + oldParent.id + "&id2=" + newParent.id,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id: oldParent.id,
@@ -676,7 +676,7 @@ function deleteAllSons(idNode) {
     //debugger;
     axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/deleteTema1/" + idNode + "?id=" + idNode,
+        url: "http://159.65.223.220/tema/deleteTema1/" + idNode + "?id=" + idNode,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id: idNode
@@ -772,7 +772,7 @@ function deleteRecursiveNode(node, nodeToDelete) {
 async function updatePosition(draggingNode) {
     await axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/posicion?newx=" + draggingNode.freex + "&newy=" + draggingNode.freey + "&id=" + draggingNode.id,
+        url: "http://159.65.223.220/tema/posicion?newx=" + draggingNode.freex + "&newy=" + draggingNode.freey + "&id=" + draggingNode.id,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             newy: draggingNode.freey,
@@ -795,7 +795,7 @@ async function createRequestNewNode(new_node) {
     var newId;
     await axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/addTema?nombre_tema=" + new_node.name + "&nivel_tema=" + (create_node_parent.level2 + 1) + "&id_padre=" + create_node_parent.id +
+        url: "http://159.65.223.220/tema/addTema?nombre_tema=" + new_node.name + "&nivel_tema=" + (create_node_parent.level2 + 1) + "&id_padre=" + create_node_parent.id +
             "&freex=" + new_node.freex + "&freey=" + new_node.freey + "&textPosition=" + new_node.textPosition + "&color=" + color,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
@@ -828,7 +828,7 @@ async function getTreeFromBD() {
     //Consultar la base de datos
     await axios({
         method: 'get',
-        url: "http://161.35.56.15/temas/arbol",
+        url: "http://159.65.223.220/temas/arbol",
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }).then(function (response) {
         treeData = response['data']['treeStructure'];
@@ -864,7 +864,7 @@ function loadQuestions(d) {
 
     axios({
         method: 'get',
-        url: "http://161.35.56.15/preguntas/nodo?id=" + d.id,
+        url: "http://159.65.223.220/preguntas/nodo?id=" + d.id,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }).then(function (response) {
         
@@ -895,7 +895,7 @@ function listarNodos(d){
     mensaje_uno.innerHTML = "";
     axios({
         method: 'get',
-        url: "http://161.35.56.15/temas/posiblesNodosPadres/" + d.level2,
+        url: "http://159.65.223.220/temas/posiblesNodosPadres/" + d.level2,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }).then(function (response) {
         nodos = response.data[0];
@@ -906,7 +906,7 @@ function listarNodos(d){
         }
         axios({
             method: 'get',
-            url: "http://161.35.56.15/temas/obtenerPadres/" + d.id,
+            url: "http://159.65.223.220/temas/obtenerPadres/" + d.id,
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
         }).then(function (response) {
             let padres = response.data[0];
@@ -942,7 +942,7 @@ function listarNodosPadre(d){
     mensaje_uno.innerHTML = "";
     axios({
         method: 'get',
-        url: "http://161.35.56.15/temas/posiblesNodosPadres/" + d.level2,
+        url: "http://159.65.223.220/temas/posiblesNodosPadres/" + d.level2,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }).then(function (response) {
         nodos = response.data[0];
@@ -953,7 +953,7 @@ function listarNodosPadre(d){
         }
         axios({
             method: 'get',
-            url: "http://161.35.56.15/temas/obtenerPadres/" + d.id,
+            url: "http://159.65.223.220/temas/obtenerPadres/" + d.id,
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
         }).then(function (response) {
             let padres = response.data[0];
@@ -984,7 +984,7 @@ function listarNodosPadre(d){
     $('#oldParentSelect').empty().trigger("change");
     axios({
     method: 'get',
-    url: "http://161.35.56.15/obtenerConexiones/" + d.id,
+    url: "http://159.65.223.220/obtenerConexiones/" + d.id,
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }).then(function (response) {
     let conexiones = response.data[0];
@@ -1012,7 +1012,7 @@ async  function obtenerColoresRelaciones(){
     let relaciones_secundarias = [];
     await axios({
         method: 'get',
-        url: "http://161.35.56.15/tema/relacionesPrimarias",
+        url: "http://159.65.223.220/tema/relacionesPrimarias",
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }).then(function (response) {
 
@@ -1049,7 +1049,7 @@ async function guardarNuevoColor(){
 
     await axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/actualizarColor?id=" + id_conexion + "&color=" + nuevo_color,
+        url: "http://159.65.223.220/tema/actualizarColor?id=" + id_conexion + "&color=" + nuevo_color,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             id: id_conexion,
@@ -1080,7 +1080,7 @@ async function updateSizeNode(){
 
     await axios({
         method: 'post',
-        url: "http://161.35.56.15/tema/actualizarRadio/" + ratio,
+        url: "http://159.65.223.220/tema/actualizarRadio/" + ratio,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: {
             radio: ratio
@@ -1104,7 +1104,7 @@ async function getSizeNode(){
     let respuesta;
     await axios({
         method: 'get',
-        url: "http://161.35.56.15/tema/obtenerRadio",
+        url: "http://159.65.223.220/tema/obtenerRadio",
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }).then(function (response) {
         //Obteniendo la data
